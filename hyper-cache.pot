@@ -1,0 +1,416 @@
+# SOME DESCRIPTIVE TITLE.
+# This file is put in the public domain.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/hyper-cache\n"
+"POT-Creation-Date: 2009-09-29 15:57+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: options.php:68
+#, php-format
+msgid ""
+"You can find more details about configurations and working mode\r\n"
+"    on <a href=\"%s\">Hyper Cache official page</a>."
+msgstr ""
+
+#: options.php:74
+msgid "Other interesting plugins:"
+msgstr ""
+
+#: options.php:84
+msgid "Cache status"
+msgstr ""
+
+#: options.php:87
+msgid "Files in cache (valid and expired)"
+msgstr ""
+
+#: options.php:92
+msgid "Clean the cache"
+msgstr ""
+
+#: options.php:96
+msgid "Statistics"
+msgstr ""
+
+#: options.php:100
+msgid "Enable statistics collection"
+msgstr ""
+
+#: options.php:104
+msgid ""
+"Very experimental and not really efficient,\r\n"
+"        but can be useful to check how the cache works."
+msgstr ""
+
+#: options.php:106
+msgid ""
+"Many .txt files willbe created inside the wp-content folder,\r\n"
+"        you can safely delete them if you need."
+msgstr ""
+
+#: options.php:125
+msgid ""
+"Below are statitics about requests Hyper Cache can handle and the ratio "
+"between the\r\n"
+"requests served by Hyper Cache and the ones served by WordPress."
+msgstr ""
+
+#: options.php:128
+msgid ""
+"Requests that bypass the cache due to configurations are not counted because "
+"they are\r\n"
+"explicitely not cacheable."
+msgstr ""
+
+#: options.php:136
+msgid "Detailed data broken up on different types of cache hits"
+msgstr ""
+
+#: options.php:149 options.php:233 options.php:259 options.php:298
+#: options.php:404
+msgid "Update"
+msgstr ""
+
+#: options.php:152
+msgid "Configuration"
+msgstr ""
+
+#: options.php:157
+msgid "Cached pages timeout"
+msgstr ""
+
+#: options.php:160 options.php:174
+msgid "minutes"
+msgstr ""
+
+#: options.php:162
+msgid ""
+"Minutes a cached page is valid and served to users. A zero value means a "
+"cached page is\r\n"
+"        valid forever."
+msgstr ""
+
+#: options.php:164
+msgid ""
+"If a cached page is older than specified value (expired) it is no more used "
+"and\r\n"
+"        will be regenerated on next request of it."
+msgstr ""
+
+#: options.php:166
+msgid "720 minutes is half a day, 1440 is a full day and so on."
+msgstr ""
+
+#: options.php:171
+msgid "Cache autoclean"
+msgstr ""
+
+#: options.php:176
+msgid ""
+"Frequency of the autoclean process which removes to expired cached pages to "
+"free\r\n"
+"        disk space."
+msgstr ""
+
+#: options.php:178
+msgid ""
+"Set lower or equals of timeout above. If set to zero the autoclean process "
+"never\r\n"
+"        runs."
+msgstr ""
+
+#: options.php:180
+msgid ""
+"There is no performance improvements setting to zero, worse the cache folder "
+"will fill up\r\n"
+"        being slower."
+msgstr ""
+
+#: options.php:182
+msgid ""
+"If timeout is set to zero, autoclean never runs, so this value has no meaning"
+msgstr ""
+
+#: options.php:187
+msgid "Cache invalidation mode"
+msgstr ""
+
+#: options.php:190
+msgid "All cached pages"
+msgstr ""
+
+#: options.php:191
+msgid "Only modified posts"
+msgstr ""
+
+#: options.php:192
+msgid "Only modified pages"
+msgstr ""
+
+#: options.php:193
+msgid "Nothing"
+msgstr ""
+
+#: options.php:197
+msgid "Invalidate home, archives, categories on single post invalidation"
+msgstr ""
+
+#: options.php:200
+msgid ""
+"\"Invalidation\" is the process of deleting cached pages when they are no "
+"more valid."
+msgstr ""
+
+#: options.php:201
+msgid ""
+"Invalidation process is started when blog contents are modified (new post, "
+"post update, new comment,...) so\r\n"
+"        one or more cached pages need to be refreshed to get that new "
+"content."
+msgstr ""
+
+#: options.php:203
+msgid ""
+"A new comment submission or a comment moderation is considered like a post "
+"modification\r\n"
+"        where the post is the one the comment is relative to."
+msgstr ""
+
+#: options.php:209
+msgid "Disable cache for commenters"
+msgstr ""
+
+#: options.php:213
+msgid ""
+"When users leave comments, WordPress show pages with their comments even if "
+"in moderation\r\n"
+"        (and not visible to others) and pre-fills the comment form."
+msgstr ""
+
+#: options.php:215
+msgid "If you want to keep those features, enable this option."
+msgstr ""
+
+#: options.php:216
+msgid "The caching system will be less efficient but the blog more usable."
+msgstr ""
+
+#: options.php:222
+msgid "Feeds caching"
+msgstr ""
+
+#: options.php:226
+msgid "When enabled the blog feeds will be cache as well."
+msgstr ""
+
+#: options.php:227
+msgid ""
+"Usually this options has to be left unchecked but if your blog is rather "
+"static,\r\n"
+"        you can enable it and have a bit more efficiency"
+msgstr ""
+
+#: options.php:236
+msgid "Configuration for mobile devices"
+msgstr ""
+
+#: options.php:239
+msgid "Detect mobile devices"
+msgstr ""
+
+#: options.php:243
+msgid ""
+"When enabled mobile devices will be detected and the cached page stored "
+"under different name."
+msgstr ""
+
+#: options.php:244
+msgid ""
+"This makes blogs with different themes for mobile devices to work correctly."
+msgstr ""
+
+#: options.php:249
+msgid "Mobile agent list"
+msgstr ""
+
+#: options.php:253
+msgid "One per line mobile agents to check for when a page is requested."
+msgstr ""
+
+#: options.php:254
+msgid ""
+"The mobile agent string is matched against the agent a device is sending to "
+"the server."
+msgstr ""
+
+#: options.php:263
+msgid "Compression"
+msgstr ""
+
+#: options.php:267
+msgid ""
+"Your hosting space has not the \"gzencode\" or \"gzinflate\" function, so no "
+"compression options are available."
+msgstr ""
+
+#: options.php:273
+msgid "Enable compression"
+msgstr ""
+
+#: options.php:277
+msgid "When possible the page will be sent compressed to save bandwidth."
+msgstr ""
+
+#: options.php:278
+msgid ""
+"Only the textual part of a page can be compressed, not images, so a photo\r\n"
+"        blog will consume a lot of bandwidth even with compression enabled."
+msgstr ""
+
+#: options.php:280 options.php:293
+msgid "Leave the options disabled if you note malfunctions, like blank pages."
+msgstr ""
+
+#: options.php:282
+msgid "If you enable this option, the option below will be enabled as well."
+msgstr ""
+
+#: options.php:287
+msgid "Disk space usage"
+msgstr ""
+
+#: options.php:291
+msgid "Enable this option to minimize disk space usage."
+msgstr ""
+
+#: options.php:292
+msgid "The cache will be a little less performant."
+msgstr ""
+
+#: options.php:303
+msgid "Advanced options"
+msgstr ""
+
+#: options.php:307
+msgid "Translation"
+msgstr ""
+
+#: options.php:311
+msgid "DO NOT show this panel translated."
+msgstr ""
+
+#: options.php:316
+msgid "Home caching"
+msgstr ""
+
+#: options.php:320
+msgid "DO NOT cache the home page so it is always fresh."
+msgstr ""
+
+#: options.php:325
+msgid "Redirect caching"
+msgstr ""
+
+#: options.php:329
+msgid "Cache WordPress redirects."
+msgstr ""
+
+#: options.php:330
+msgid ""
+"WordPress sometime sends back redirects that can be cached to avoid further "
+"processing time."
+msgstr ""
+
+#: options.php:335
+msgid "URL with parameters"
+msgstr ""
+
+#: options.php:339
+msgid "Cache requests with query string (parameters)."
+msgstr ""
+
+#: options.php:340
+msgid ""
+"This option has to be enabled for blogs which have post URLs with a question "
+"mark on them."
+msgstr ""
+
+#: options.php:341
+msgid ""
+"This option is disabled by default because there is plugins which use\r\n"
+"        URL parameter to perform specific action that cannot be cached"
+msgstr ""
+
+#: options.php:343
+msgid ""
+"For who is using search engines friendly permalink format is safe to\r\n"
+"        leave this option disabled, no performances will be lost."
+msgstr ""
+
+#: options.php:349
+msgid "URI to reject"
+msgstr ""
+
+#: options.php:353
+msgid "Write one URI per line, each URI has to start with a slash."
+msgstr ""
+
+#: options.php:354
+msgid ""
+"A specified URI will match the requested URI if the latter starts with the "
+"former."
+msgstr ""
+
+#: options.php:355
+msgid ""
+"If you want to specify a stric matching, surround the URI with double quotes."
+msgstr ""
+
+#: options.php:374
+msgid "Agents to reject"
+msgstr ""
+
+#: options.php:378
+msgid "Write one agent per line."
+msgstr ""
+
+#: options.php:379
+msgid ""
+"A specified agent will match the client agent if the latter contains the "
+"former. The matching is case insensitive."
+msgstr ""
+
+#: options.php:384
+msgid "Cookies matching"
+msgstr ""
+
+#: options.php:388
+msgid "Write one cookie name per line."
+msgstr ""
+
+#: options.php:389
+msgid ""
+"When a specified cookie will match one of the cookie names sent bby the "
+"client the cache stops."
+msgstr ""
+
+#: options.php:392
+msgid ""
+"It seems you have Facebook Connect plugin installed. Add this cookie name to "
+"make it works\r\n"
+"        with Hyper Cache:"
+msgstr ""
+
+#: plugin.php:120
+msgid "Settings"
+msgstr ""
