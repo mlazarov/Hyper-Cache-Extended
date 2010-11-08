@@ -4,7 +4,7 @@ Requires at least: 2.5
 Tested up to: 3.0
 Stable tag: trunk
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2545483
-Contributors: mlazarov
+Contributors: mlazarov, satollo
 
 Hyper Cache Extended is flexible and easy to configure cache system for WordPress. It's aim is to work on any installation.
 
@@ -35,7 +35,7 @@ Some features:
 * easy to integrated with other plugins
 * option to move cache to other partition/disk
 
-More can be read on the [official plugin page](http://marto.lazarov/plugins/hyper-cache) and write me
+More can be read on the [official plugin page](http://marto.lazarov.org/plugins/hyper-cache) and write me
 if you have issues to lazarov@mail.bg
 
 
