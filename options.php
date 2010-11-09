@@ -1,89 +1,79 @@
 <?php
-
 $options = get_option('hyper');
 
-if (!$options['notranslation'])
-{
-    $plugin_dir = basename(dirname(__FILE__));
-    load_plugin_textdomain('hyper-cache', 'wp-content/plugins/' . $plugin_dir, $plugin_dir);
+if (!$options['notranslation']) {
+	$plugin_dir = basename(dirname(__FILE__));
+	load_plugin_textdomain('hyper-cache', 'wp-content/plugins/' . $plugin_dir, $plugin_dir);
 }
 
-
-if (isset($_POST['clean']))
-{
-    hyper_delete_path($hyper_cache['path']);
+if (isset ($_POST['clean'])) {
+	hyper_delete_path($hyper_cache['path']);
 }
 
 $error = false;
-if (isset($_POST['save'])) 
-{
-    if (!check_admin_referer()) die('No hacking please');
-    
-    $tmp = stripslashes_deep($_POST['options']);
+if (isset ($_POST['save'])) {
+	//if (!check_admin_referer()) die('No hacking please');
+	$tmp = stripslashes_deep($_POST['options']);
 
-    if ($options['gzip'] != $tmp['gzip'])
-    {
-        hyper_delete_path($hyper_cache['path']);
-    }
+	if ($options['gzip'] != $tmp['gzip']) {
+		hyper_delete_path($hyper_cache['path']);
+	}
 
-    $options = $tmp;
-    
-    if (!is_numeric($options['timeout'])) $options['timeout'] = 60;
-    $options['timeout'] = (int)$options['timeout'];
+	$options = $tmp;
 
-    if (!is_numeric($options['clean_interval'])) $options['clean_interval'] = 60;
-    $options['clean_interval'] = (int)$options['clean_interval'];
+	if (!is_numeric($options['timeout']))
+		$options['timeout'] = 60;
+	$options['timeout'] = (int) $options['timeout'];
 
-    $buffer = hyper_generate_config($options);
-    
-    $file = @fopen(ABSPATH . 'wp-content/advanced-cache.php', 'w');
-    if ($file) {
-    @fwrite($file, $buffer);
-    @fclose($file);
-    }
-    else {
-        $error = true;
-    }
-    update_option('hyper', $options);
+	if (!is_numeric($options['clean_interval']))
+		$options['clean_interval'] = 60;
+	$options['clean_interval'] = (int) $options['clean_interval'];
 
-    // When the cache does not expire
-    if ($options['expire_type'] == 'none')
-    {
-        @unlink($hyper_cache['path'] . '/_global.dat');
-        @unlink($hyper_cache['path'] . '/_archives.dat');
-    }
-} 
-else 
-{
-    if ($options['mobile_agents'] == '')
-    {
-        $options['mobile_agents'] = "elaine/3.0\niphone\nipod\npalm\neudoraweb\nblazer\navantgo\nwindows ce\ncellphone\nsmall\nmmef20\ndanger\nhiptop\nproxinet\nnewt\npalmos\nnetfront\nsharp-tq-gx10\nsonyericsson\nsymbianos\nup.browser\nup.link\nts21i-10\nmot-v\nportalmmm\ndocomo\nopera mini\npalm\nhandspring\nnokia\nkyocera\nsamsung\nmotorola\nmot\nsmartphone\nblackberry\nwap\nplaystation portable\nlg\nmmp\nopwv\nsymbian\nepoc";
-    }
+	$buffer = hyper_generate_config($options);
+
+	$file = @ fopen(ABSPATH . 'wp-content/advanced-cache.php', 'w');
+	if ($file) {
+		@ fwrite($file, $buffer);
+		@ fclose($file);
+	} else {
+		$error = true;
+	}
+	update_option('hyper', $options);
+
+	// When the cache does not expire
+	if ($options['expire_type'] == 'none') {
+		@ unlink($hyper_cache['path'] . '/_global.dat');
+		@ unlink($hyper_cache['path'] . '/_archives.dat');
+	}
+} else {
+	if ($options['mobile_agents'] == '') {
+		$options['mobile_agents'] = "elaine/3.0\niphone\nipod\npalm\neudoraweb\nblazer\navantgo\nwindows ce\ncellphone\nsmall\nmmef20\ndanger\nhiptop\nproxinet\nnewt\npalmos\nnetfront\nsharp-tq-gx10\nsonyericsson\nsymbianos\nup.browser\nup.link\nts21i-10\nmot-v\nportalmmm\ndocomo\nopera mini\npalm\nhandspring\nnokia\nkyocera\nsamsung\nmotorola\nmot\nsmartphone\nblackberry\nwap\nplaystation portable\nlg\nmmp\nopwv\nsymbian\nepoc";
+	}
 }
-
-
 ?>
 <div class="wrap">
 
 <h2>Hyper Cache Extended <small><?php echo HYPER_CACHE_EXTENDED; ?></small></h2>
 <?php
-    if ($error)
-    {
-        echo '<p><strong>Options saved BUT not active because Hyper Cache was not able to update the file wp-content/advanced-cache.php (is it writable?).</strong></p>';
-    }
+
+if ($error) {
+	echo '<p><strong>Options saved BUT not active because Hyper Cache was not able to update the file wp-content/advanced-cache.php (is it writable?).</strong></p>';
+}
 ?>
 <?php
-    if (!@touch($hyper_cache['path'] . '/_test.dat'))
-    {
-        echo '<p><strong>Hyper Cache was not able to create files in the folder "cache" in its installation dir. Make it writable (eg. chmod 777).</strong></p>';
-    }
+
+if (!@ touch($hyper_cache['path'] . '/_test.dat')) {
+	echo '<p><strong>Hyper Cache was not able to create files in the folder "cache" in its installation dir. Make it writable (eg. chmod 777).</strong></p>';
+}
 ?>
 <!--iframe width="100%" height="120" src="http://www.satollo.net/services/hyper-cache" style="border: 1px solid #ccc"></iframe//-->
 
 <!--p>
-    <?php printf(__('You can find more details about configurations and working mode
-    on <a href="%s">Hyper Cache official page</a>.', 'hyper-cache'),
-    'http://www.satollo.net/plugins/hyper-cache'); ?>
+    <?php
+
+printf(__('You can find more details about configurations and working mode
+    on <a href="%s">Hyper Cache official page</a>.', 'hyper-cache'), 'http://www.satollo.net/plugins/hyper-cache');
+?>
 </p//-->
 
 <form method="post" action="">
@@ -116,10 +106,8 @@ else
         <input type="text" size="5" name="options[timeout]" value="<?php echo htmlspecialchars($options['timeout']); ?>"/>
         (<?php _e('minutes', 'hyper-cache'); ?>)
         <br />
-        <?php _e('Minutes a cached page is valid and served to users. A zero value means a cached page is
-        valid forever.', 'hyper-cache'); ?>
-        <?php _e('If a cached page is older than specified value (expired) it is no more used and
-        will be regenerated on next request of it.', 'hyper-cache'); ?>
+        <?php_e('Minutes a cached page is valid and served to users. A zero value means a cached page is valid forever.', 'hyper-cache');?>
+        <?php_e('If a cached page is older than specified value (expired) it is no more used and will be regenerated on next request of it.', 'hyper-cache');?>
         <?php _e('720 minutes is half a day, 1440 is a full day and so on.', 'hyper-cache'); ?>
     </td>
 </tr>
@@ -139,10 +127,10 @@ else
         <br />
         <br />
         <?php _e('"Invalidation" is the process of deleting cached pages when they are no more valid.', 'hyper-cache'); ?>
-        <?php _e('Invalidation process is started when blog contents are modified (new post, post update, new comment,...) so
-        one or more cached pages need to be refreshed to get that new content.', 'hyper-cache'); ?>
-        <?php _e('A new comment submission or a comment moderation is considered like a post modification
-        where the post is the one the comment is relative to.', 'hyper-cache'); ?>
+        <?php_e('Invalidation process is started when blog contents are modified (new post, post update, new comment,...) so
+        one or more cached pages need to be refreshed to get that new content.', 'hyper-cache');?>
+        <?php_e('A new comment submission or a comment moderation is considered like a post modification
+        where the post is the one the comment is relative to.', 'hyper-cache');?>
     </td>
 </tr>
 
@@ -151,8 +139,8 @@ else
     <td>
         <input type="checkbox" name="options[comment]" value="1" <?php echo $options['comment']?'checked':''; ?>/>
         <br />
-        <?php _e('When users leave comments, WordPress show pages with their comments even if in moderation
-        (and not visible to others) and pre-fills the comment form.', 'hyper-cache'); ?>
+        <?php_e('When users leave comments, WordPress show pages with their comments even if in moderation
+        (and not visible to others) and pre-fills the comment form.', 'hyper-cache');?>
         <?php _e('If you want to keep those features, enable this option.', 'hyper-cache'); ?>
         <?php _e('The caching system will be less efficient but the blog more usable.'); ?>
 
@@ -165,8 +153,8 @@ else
         <input type="checkbox" name="options[feed]" value="1" <?php echo $options['feed']?'checked':''; ?>/>
         <br />
         <?php _e('When enabled the blog feeds will be cache as well.', 'hyper-cache'); ?>
-        <?php _e('Usually this options has to be left unchecked but if your blog is rather static,
-        you can enable it and have a bit more efficiency', 'hyper-cache'); ?>
+        <?php_e('Usually this options has to be left unchecked but if your blog is rather static,
+        you can enable it and have a bit more efficiency', 'hyper-cache');?>
     </td>    
 </tr>
 </table>
@@ -225,8 +213,11 @@ else
         <input type="checkbox" name="options[gzip]" value="1" <?php echo $options['gzip']?'checked':''; ?> />
         <br />
         <?php _e('When possible the page will be sent compressed to save bandwidth.', 'hyper-cache'); ?>
-        <?php _e('Only the textual part of a page can be compressed, not images, so a photo
-        blog will consume a lot of bandwidth even with compression enabled.', 'hyper-cache'); ?>
+        <?php
+
+_e('Only the textual part of a page can be compressed, not images, so a photo
+        blog will consume a lot of bandwidth even with compression enabled.', 'hyper-cache');
+?>
         <?php _e('Leave the options disabled if you note malfunctions, like blank pages.', 'hyper-cache'); ?>
         <br />
         <?php _e('If you enable this option, the option below will be enabled as well.', 'hyper-cache'); ?>
@@ -319,10 +310,16 @@ else
         <br />
         <?php _e('Cache requests with query string (parameters).', 'hyper-cache'); ?>
         <?php _e('This option has to be enabled for blogs which have post URLs with a question mark on them.', 'hyper-cache'); ?>
-        <?php _e('This option is disabled by default because there is plugins which use
-        URL parameter to perform specific action that cannot be cached', 'hyper-cache'); ?>
-        <?php _e('For who is using search engines friendly permalink format is safe to
-        leave this option disabled, no performances will be lost.', 'hyper-cache'); ?>
+        <?php
+
+_e('This option is disabled by default because there is plugins which use
+        URL parameter to perform specific action that cannot be cached', 'hyper-cache');
+?>
+        <?php
+
+_e('For who is using search engines friendly permalink format is safe to
+        leave this option disabled, no performances will be lost.', 'hyper-cache');
+?>
     </td>
 </tr>
 
@@ -336,18 +333,20 @@ else
         <?php _e('If you want to specify a stric matching, surround the URI with double quotes.', 'hyper-cache'); ?>
 
         <?php
-        $languages = get_option('gltr_preferred_languages');
-        if (is_array($languages))
-        {
-            echo '<br />';
-            $home = get_option('home');
-            $x = strpos($home, '/', 8); // skips http://
-            $base = '';
-            if ($x !== false) $base = substr($home, $x);
-            echo 'It seems you have Global Translator installed. The URI prefixes below can be added to avoid double caching of translated pages:<br />';
-            foreach($languages as $l) echo $base . '/' . $l . '/ ';
-        }
-        ?>
+
+$languages = get_option('gltr_preferred_languages');
+if (is_array($languages)) {
+	echo '<br />';
+	$home = get_option('home');
+	$x = strpos($home, '/', 8); // skips http://
+	$base = '';
+	if ($x !== false)
+		$base = substr($home, $x);
+	echo 'It seems you have Global Translator installed. The URI prefixes below can be added to avoid double caching of translated pages:<br />';
+	foreach ($languages as $l)
+		echo $base . '/' . $l . '/ ';
+}
+?>
     </td>
 </tr>
 
@@ -370,8 +369,11 @@ else
         <?php _e('When a specified cookie will match one of the cookie names sent bby the client the cache stops.', 'hyper-cache'); ?>
         <?php if (defined('FBC_APP_KEY_OPTION')) { ?>
         <br />
-        <?php _e('It seems you have Facebook Connect plugin installed. Add this cookie name to make it works
-        with Hyper Cache:', 'hyper-cache'); ?>
+        <?php
+
+_e('It seems you have Facebook Connect plugin installed. Add this cookie name to make it works
+        with Hyper Cache:', 'hyper-cache');
+?>
         <br />
         <strong><?php echo get_option(FBC_APP_KEY_OPTION); ?>_user</strong>
         <?php } ?>

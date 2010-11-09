@@ -41,7 +41,7 @@ if you have issues to lazarov@mail.bg
 
 Thanks to:
 
-* Satollo wich is the creator of Hyper Cache
+* Satollo which is the creator of Hyper Cache
 * Amaury Balmer for internationalization and other modifications
 * Frank Luef for german translation
 * HypeScience, Martin Steldinger, Giorgio Guglielmino for test and bugs submissions
