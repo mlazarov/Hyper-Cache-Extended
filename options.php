@@ -82,6 +82,10 @@ printf(__('You can find more details about configurations and working mode
 <h3><?php _e('Cache status', 'hyper-cache'); ?></h3>
 <table class="form-table">
 <tr valign="top">
+    <th><?php _e('Current cache directory', 'hyper-cache'); ?></th>
+    <td><?php echo $hyper_cache['path']; ?></td>
+</tr>
+<tr valign="top">
     <th><?php _e('Files in cache (valid and expired)', 'hyper-cache'); ?></th>
     <td><?php echo hyper_count(); ?></td>
 </tr>
@@ -106,8 +110,8 @@ printf(__('You can find more details about configurations and working mode
         <input type="text" size="5" name="options[timeout]" value="<?php echo htmlspecialchars($options['timeout']); ?>"/>
         (<?php _e('minutes', 'hyper-cache'); ?>)
         <br />
-        <?php_e('Minutes a cached page is valid and served to users. A zero value means a cached page is valid forever.', 'hyper-cache');?>
-        <?php_e('If a cached page is older than specified value (expired) it is no more used and will be regenerated on next request of it.', 'hyper-cache');?>
+        <?php _e('Minutes a cached page is valid and served to users. A zero value means a cached page is valid forever.', 'hyper-cache');?>
+        <?php _e('If a cached page is older than specified value (expired) it is no more used and will be regenerated on next request of it.', 'hyper-cache');?>
         <?php _e('720 minutes is half a day, 1440 is a full day and so on.', 'hyper-cache'); ?>
     </td>
 </tr>
@@ -127,9 +131,9 @@ printf(__('You can find more details about configurations and working mode
         <br />
         <br />
         <?php _e('"Invalidation" is the process of deleting cached pages when they are no more valid.', 'hyper-cache'); ?>
-        <?php_e('Invalidation process is started when blog contents are modified (new post, post update, new comment,...) so
+        <?php _e('Invalidation process is started when blog contents are modified (new post, post update, new comment,...) so
         one or more cached pages need to be refreshed to get that new content.', 'hyper-cache');?>
-        <?php_e('A new comment submission or a comment moderation is considered like a post modification
+        <?php _e('A new comment submission or a comment moderation is considered like a post modification
         where the post is the one the comment is relative to.', 'hyper-cache');?>
     </td>
 </tr>
@@ -139,7 +143,7 @@ printf(__('You can find more details about configurations and working mode
     <td>
         <input type="checkbox" name="options[comment]" value="1" <?php echo $options['comment']?'checked':''; ?>/>
         <br />
-        <?php_e('When users leave comments, WordPress show pages with their comments even if in moderation
+        <?php _e('When users leave comments, WordPress show pages with their comments even if in moderation
         (and not visible to others) and pre-fills the comment form.', 'hyper-cache');?>
         <?php _e('If you want to keep those features, enable this option.', 'hyper-cache'); ?>
         <?php _e('The caching system will be less efficient but the blog more usable.'); ?>
@@ -153,7 +157,7 @@ printf(__('You can find more details about configurations and working mode
         <input type="checkbox" name="options[feed]" value="1" <?php echo $options['feed']?'checked':''; ?>/>
         <br />
         <?php _e('When enabled the blog feeds will be cache as well.', 'hyper-cache'); ?>
-        <?php_e('Usually this options has to be left unchecked but if your blog is rather static,
+        <?php _e('Usually this options has to be left unchecked but if your blog is rather static,
         you can enable it and have a bit more efficiency', 'hyper-cache');?>
     </td>    
 </tr>
