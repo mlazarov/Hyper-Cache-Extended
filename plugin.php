@@ -327,13 +327,14 @@ function hyper_log($text){
 }
 
 function hyper_generate_config(&$options){
+	global $hyper_cache;
     $buffer = '';
 
     $timeout = $options['timeout']*60;
     if ($timeout == 0) $timeout = 2000000000;
 
     $buffer = "<?php\n";
-    $buffer .= '$hyper_cache[\'path\'] = "' . (isset($options['path'])?addslashes($options['path']):addslashes(dirname(__FILE__).'/cache/')). "\";\n";
+    $buffer .= '$hyper_cache[\'path\'] = "' . (isset($hyper_cache['path'])?addslashes($hyper_cache['path']):addslashes(dirname(__FILE__).'/cache/')). "\";\n";
     $buffer .= '$hyper_cache[\'charset\']= "' . get_option('blog_charset') . '"' . ";\n";
     // Collect statistics
     //$buffer .= '$hyper_cache_stats = ' . (isset($options['stats'])?'true':'false') . ";\n";
