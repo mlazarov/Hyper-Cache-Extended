@@ -101,9 +101,13 @@ $server_load = (float)$loadavg[0];
 $hc_file_time = @ filemtime($hc_file);
 $hc_file_age = time() - $hc_file_time;
 
-if ($hc_file_age > $hyper_cache['timeout'] && $server_load < $hyper_cache['load']) {
-	hyper_cache_start();
-	return;
+if ($hc_file_age > $hyper_cache['timeout']){
+	if($server_load < $hyper_cache['load']) {
+		hyper_cache_start();
+		return;
+	}else{
+		hyper_log_cache('File expired but Server load ('.$server_load.') above ('.$hyper_cache['load'].')');
+	}
 }
 
 $hc_invalidation_time = @ filemtime($hyper_cache['path'] . '_global.dat');
@@ -123,9 +127,15 @@ if (!$hyper_data) {
 if ($hyper_data['type'] == 'home' || $hyper_data['type'] == 'archive') {
 
 	$hc_invalidation_archive_file = @ filemtime($hyper_cache['path'] . '_archives.dat');
-	if ($hc_invalidation_archive_file && $hc_file_time < $hc_invalidation_archive_file) {
-		hyper_cache_start();
-		return;
+	if ($hc_invalidation_archive_file){
+		if($hc_file_time < $hc_invalidation_archive_file){
+			if($server_load < $hyper_cache['load']) {
+				hyper_cache_start();
+				return;
+			}else{
+				hyper_log_cache('Archives expired but Server load ('.$server_load.') above ('.$hyper_cache['load'].')');
+			}
+		}
 	}
 }
 
