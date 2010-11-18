@@ -129,7 +129,7 @@ printf(__('You can find more details about configurations and working mode
     <td>
         <input type="text" size="5" name="options[load]" value="<?php echo htmlspecialchars($options['load']); ?>"/>
         <br />
-        <?php _e('Hyper Cache Extended will server the cached pages until Server Load is below this number', 'hyper-cache');?>
+        <?php _e('Hyper Cache Extended will serve the cached pages until Server Load is below this number', 'hyper-cache');?>
     </td>
 </tr>
 
