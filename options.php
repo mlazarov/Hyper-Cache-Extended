@@ -93,7 +93,7 @@ printf(__('You can find more details about configurations and working mode
     <th><?php _e('Server Load', 'hyper-cache'); ?></th>
     <td><?php
     $loadavg = explode(' ',@file_get_contents('/proc/loadavg'));
-	echo (int)$loadavg[0];
+	echo (float)$loadavg[0];
 	?></td>
 </tr>
 <tr valign="top">

@@ -16,7 +16,7 @@ people which have their blogs on low resources hosting provider
 the configuration). It has three invalidation method: all the cache, single post
 based and nothing but with control on home and archive pages invalidation.
 Hyper Cache Extended is based on original wordpress plugin "Hyper Cache" wich is
-writen by Satollo (http://www.satollo.net/plugins/hyper-cache)
+writen by Satollo (http://wordpress.org/extend/plugins/hyper-cache)
 
 It has not yet tested for multisite configuration (WordPress 3.0 feature).
 
@@ -34,9 +34,9 @@ Some features:
 * agents, urls and cookies based rejection configurable
 * easy to integrated with other plugins
 * option to move cache to other partition/disk
-* only server cached pages when server load is above a certain load
+* only serve cached pages when web server average load is above a certain number
 
-More can be read on the [official plugin page](http://marto.lazarov.org/plugins/hyper-cache) and write me
+More can be read on the [official plugin page](http://marto.lazarov.org/plugins/hyper-cache-extended) and write me
 if you have issues to lazarov@mail.bg
 
 

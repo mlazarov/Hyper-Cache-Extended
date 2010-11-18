@@ -96,7 +96,7 @@ if (!file_exists($hc_file)) {
 if(!$hyper_cache['load']) $hyper_cache['load'] = 5;
 
 $loadavg = explode(' ',@file_get_contents('/proc/loadavg'));
-$server_load = (int)$loadavg[0];
+$server_load = (float)$loadavg[0];
 
 $hc_file_time = @ filemtime($hc_file);
 $hc_file_age = time() - $hc_file_time;
