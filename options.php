@@ -11,6 +11,7 @@ if (isset ($_POST['clean'])) {
 }
 
 $error = false;
+$saved = false;
 if (isset ($_POST['save'])) {
 	//if (!check_admin_referer()) die('No hacking please');
 	$tmp = stripslashes_deep($_POST['options']);
@@ -35,6 +36,7 @@ if (isset ($_POST['save'])) {
 	if ($file) {
 		@ fwrite($file, $buffer);
 		@ fclose($file);
+		$saved = true;
 	} else {
 		$error = true;
 	}
@@ -58,6 +60,9 @@ if (isset ($_POST['save'])) {
 
 if ($error) {
 	echo '<p><strong>Options saved BUT not active because Hyper Cache was not able to update the file wp-content/advanced-cache.php (is it writable?).</strong></p>';
+}
+if ($saved) {
+	echo '<p><strong>Options saved</strong></p>';
 }
 ?>
 <?php

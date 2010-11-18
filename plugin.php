@@ -52,7 +52,7 @@ function hyper_activate(){
         $options['comment'] = 1;
         $options['archive'] = 1;
         $options['timeout'] = 1440;
-        $options['timeout'] = 5;
+        $options['load'] = 5;
         $options['redirects'] = 1;
         $options['notfound'] = 1;
         $options['clean_interval'] = 60;
@@ -163,8 +163,8 @@ function hyper_plugin_action_links($links){
 
 add_action('admin_menu', 'hyper_admin_menu');
 function hyper_admin_menu(){
-	//$hook=add_submenu_page('index.php','Hyper Cache E','Hyper Cache E','manage_options','hyper-cache-extended/options.php');
-    //add_action('hook-'.$hook,'hyper-cache-extended','options');
+	$hook=add_submenu_page('index.php','Hyper Cache E','Hyper Cache E','manage_options','hyper-cache-extended/options.php');
+    add_action('hook-'.$hook,'hyper-cache-extended','options');
     //add_options_page('Hyper Cache', 'Hyper Cache Extended', 'manage_options', 'hyper-cache-extended/options.php');
 }
 
