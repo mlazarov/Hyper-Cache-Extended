@@ -163,9 +163,9 @@ function hyper_plugin_action_links($links){
 
 add_action('admin_menu', 'hyper_admin_menu');
 function hyper_admin_menu(){
-	$hook=add_submenu_page('index.php','Hyper Cache E','Hyper Cache E','manage_options','hyper-cache-extended/options.php');
-    add_action('hook-'.$hook,'hyper-cache-extended','options');
-    //add_options_page('Hyper Cache', 'Hyper Cache Extended', 'manage_options', 'hyper-cache-extended/options.php');
+	//$hook=add_submenu_page('index.php','Hyper Cache E','Hyper Cache E','manage_options','hyper-cache-extended/options.php');
+   // add_action('hook-'.$hook,'hyper-cache-extended','options');
+    add_options_page('Hyper Cache', 'Hyper Cache Extended', 'manage_options', 'hyper-cache-extended/options.php');
 }
 
 // Completely invalidate the cache. The hyper-cache directory is renamed
