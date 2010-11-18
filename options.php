@@ -90,6 +90,13 @@ printf(__('You can find more details about configurations and working mode
     <td><?php echo hyper_count(); ?></td>
 </tr>
 <tr valign="top">
+    <th><?php _e('Server Load', 'hyper-cache'); ?></th>
+    <td><?php
+    $loadavg = explode(' ',@file_get_contents('/proc/loadavg'));
+	echo (int)$loadavg[0];
+	?></td>
+</tr>
+<tr valign="top">
     <th>Cleaning process</th>
     <td>Next run on: <?php echo gmdate(get_option('date_format') . ' ' . get_option('time_format'), wp_next_scheduled('hyper_clean') + get_option('gmt_offset')*3600); ?></td>
 </tr>
