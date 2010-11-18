@@ -34,6 +34,7 @@ Some features:
 * agents, urls and cookies based rejection configurable
 * easy to integrated with other plugins
 * option to move cache to other partition/disk
+* only server cached pages when server load is above a certain load
 
 More can be read on the [official plugin page](http://marto.lazarov.org/plugins/hyper-cache) and write me
 if you have issues to lazarov@mail.bg
