@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: Hyper Cache Extended
-Plugin URI: http://marto.lazarov/plugins/hyper-cache
+Plugin URI: http://marto.lazarov.org/plugins/hyper-cache-extended
 Description: Hyper Cache Extended is a cache system for WordPress to improve it's perfomances and save resources. Before update <a href="http://wordpress.org/extend/plugins/hyper-cache-extended/" target="_blank">read the version changes</a>. To manually upgrade remeber the sequence: deactivate, update, activate.
-Version: 0.7.4
+Version: 0.8.1
 Author: Martin Lazarov
 Author URI: http://marto.lazarov.org
 Disclaimer: Use at your own risk. No warranty expressed or implied is provided. Hyper Cache Extened is based on Hyper Cache plugin
@@ -33,7 +33,7 @@ Changelog
 See the readme.txt.
 
 */
-define('HYPER_CACHE_EXTENDED', '0.7.4');
+define('HYPER_CACHE_EXTENDED', '0.7.5');
 
 $hyper_invalidated = false;
 $hyper_invalidated_post_id = null;
@@ -152,17 +152,17 @@ if (is_admin()){
     }
 }
 
-/*
+
 add_filter("plugin_action_links_hyper-cache-extended/plugin.php", 'hyper_plugin_action_links');
 function hyper_plugin_action_links($links){
     $settings_link = '<a href="options-general.php?page=hyper-cache-extended/options.php">' . __( 'Settings' ) . '</a>';
     array_unshift($links, $settings_link);
     return $links;
 }
-*/
+
 add_action('admin_menu', 'hyper_admin_menu');
 function hyper_admin_menu(){
-    add_options_page('Hyper Cache', 'Hyper Cache', 'manage_options', 'hyper-cache-extended/options.php');
+    add_options_page('Hyper Cache', 'Hyper Cache Extended', 'manage_options', 'hyper-cache-extended/options.php');
 }
 
 // Completely invalidate the cache. The hyper-cache directory is renamed
@@ -304,7 +304,7 @@ add_action('delete_post', 'hyper_cache_invalidate_post', 0);
 // Capture and register if a redirect is sent back from WP, so the cache
 // can cache (or ignore) it. Redirects were source of problems for blogs
 // with more than one host name (eg. domain.com and www.domain.com) comined
-// with the use of Hyper Cache.
+// with the use of Hyper Cache Extended.
 add_filter('redirect_canonical', 'hyper_redirect_canonical', 10, 2);
 $hyper_redirect = null;
 function hyper_redirect_canonical($redirect_url, $requested_url){
@@ -316,6 +316,8 @@ function hyper_redirect_canonical($redirect_url, $requested_url){
 }
 
 function hyper_log($text){
+	// comment this return; to turn on loging
+	return;
 	$file = fopen(dirname(__FILE__) . '/log.txt', 'a');
     fwrite($file, $text . "\n");
     fclose($file);
@@ -338,6 +340,8 @@ function hyper_generate_config(&$options){
     $buffer .= '$hyper_cache[\'archive\'] = ' . ($options['archive']?'true':'false') . ";\n";
     // Single page timeout
     $buffer .= '$hyper_cache[\'timeout\'] = ' . ($timeout) . ";\n";
+    // Server Load
+    $buffer .= '$hyper_cache[\'load\'] = ' . (isset($options['load'])?$options['load']:5) . ";\n";
     // Cache redirects?
     $buffer .= '$hyper_cache[\'redirects\'] = ' . (isset($options['redirects'])?'true':'false') . ";\n";
     // Cache page not found?

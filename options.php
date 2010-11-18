@@ -116,6 +116,16 @@ printf(__('You can find more details about configurations and working mode
     </td>
 </tr>
 
+
+<tr valign="top">
+    <th><?php _e('Max server load average', 'hyper-cache'); ?></th>
+    <td>
+        <input type="text" size="5" name="options[load]" value="<?php echo htmlspecialchars($options['load']); ?>"/>
+        <br />
+        <?php _e('Hyper Cache Extended will server the cached pages until Server Load is below this number', 'hyper-cache');?>
+    </td>
+</tr>
+
 <tr valign="top">
     <th><?php _e('Cache invalidation mode', 'hyper-cache'); ?></th>
     <td>
