@@ -5,15 +5,17 @@ global $hyper_cache_stop;
 
 $hyper_cache_stop = false;
 
-hyper_log_cache('hyper cache init');
+hyper_log_cache('hyper cache init',3);
 
 // Do not cache post request (comments, plugins and so on)
 if ($_SERVER["REQUEST_METHOD"] == 'POST')
 	return false;
 
 // Try to avoid enabling the cache if sessions are managed with request parameters and a session is active
-if (defined(SID) && SID != '')
+if (defined(SID) && SID != ''){
+	hyper_log_cache('SID found returning',2);
 	return false;
+}
 
 $hyper_uri = $_SERVER['REQUEST_URI'];
 $hyper_qs = strpos($hyper_uri, '?');
@@ -89,6 +91,7 @@ $hyper_cache_name = md5($hyper_uri);
 $hc_file = $hyper_cache['path'] . $hyper_cache_name . hyper_mobile_type() . '.dat';
 
 if (!file_exists($hc_file)) {
+	hyper_log_cache('Cache not found! hyper_cache_start()',3);
 	hyper_cache_start(false);
 	return;
 }
@@ -106,12 +109,13 @@ if ($hc_file_age > $hyper_cache['timeout']){
 		hyper_cache_start();
 		return;
 	}else{
-		hyper_log_cache('File expired but Server load ('.$server_load.') above ('.$hyper_cache['load'].')');
+		hyper_log_cache('File expired but Server load ('.$server_load.') above ('.$hyper_cache['load'].')',2);
 	}
 }
 
 $hc_invalidation_time = @ filemtime($hyper_cache['path'] . '_global.dat');
 if ($hc_invalidation_time && $hc_file_time < $hc_invalidation_time) {
+	hyper_log_cache('Global expired! hyper_cache_start()',3);
 	hyper_cache_start();
 	return;
 }
@@ -120,6 +124,7 @@ if ($hc_invalidation_time && $hc_file_time < $hc_invalidation_time) {
 $hyper_data = @ unserialize(file_get_contents($hc_file));
 
 if (!$hyper_data) {
+	hyper_log_cache('Invalid data! hyper_cache_start()',1);
 	hyper_cache_start();
 	return;
 }
@@ -130,10 +135,11 @@ if ($hyper_data['type'] == 'home' || $hyper_data['type'] == 'archive') {
 	if ($hc_invalidation_archive_file){
 		if($hc_file_time < $hc_invalidation_archive_file){
 			if($server_load < $hyper_cache['load']) {
+				hyper_log_cache('Archive or home expired! hyper_cache_start()',2);
 				hyper_cache_start();
 				return;
 			}else{
-				hyper_log_cache('Archives expired but Server load ('.$server_load.') above ('.$hyper_cache['load'].')');
+				hyper_log_cache('Archives expired but Server load ('.$server_load.') above ('.$hyper_cache['load'].')',2);
 			}
 		}
 	}
@@ -141,6 +147,7 @@ if ($hyper_data['type'] == 'home' || $hyper_data['type'] == 'archive') {
 
 // Valid cache file check ends here
 if ($hyper_data['location']) {
+	hyper_log_cache('Sending Location',3);
 	header('Location: ' . $hyper_data['location']);
 	flush();
 	die();
@@ -150,6 +157,7 @@ if ($hyper_data['location']) {
 if (array_key_exists("HTTP_IF_MODIFIED_SINCE", $_SERVER)) {
 	$if_modified_since = strtotime(preg_replace('/;.*$/', '', $_SERVER["HTTP_IF_MODIFIED_SINCE"]));
 	if ($if_modified_since >= $hc_file_time) {
+		hyper_log_cache('Sending 304 Not Modified',3);
 		header("HTTP/1.0 304 Not Modified");
 		flush();
 		die();
@@ -174,6 +182,7 @@ if ($hyper_data['status'] == 404)
 
 // Send the cached html
 if ($hyper_cache['gzip'] && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false && strlen($hyper_data['gz']) > 0) {
+	hyper_log_cache('Send gzip encoded data',3);
 	header('Content-Encoding: gzip');
 	echo $hyper_data['gz'];
 } else {
@@ -181,13 +190,16 @@ if ($hyper_cache['gzip'] && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !==
 	// decompress the compressed one.
 	if ($hyper_data['html']) {
 		//header('Content-Length: ' . strlen($hyper_data['html']));
+		hyper_log_cache('Sending flat data',3);
 		echo $hyper_data['html'];
 	} else {
 		$buffer = hyper_cache_gzdecode($hyper_data['gz']);
 		if ($buffer === false)
 			echo 'Error retriving the content';
-		else
+		else{
+			hyper_log_cache('Sending decoded flat data',3);
 			echo $buffer;
+		}
 	}
 }
 flush();
@@ -196,9 +208,8 @@ die();
 function hyper_cache_start($delete = true) {
 	global $hc_file;
 
-	if ($delete)
-		@ unlink($hc_file);
-	hyper_log_cache('hyper cache start' . $delete);
+	if ($delete) @ unlink($hc_file);
+	hyper_log_cache('hyper_cache_start()' . $delete,3);
 	foreach ($_COOKIE as $n => $v) {
 		if (substr($n, 0, 14) == 'comment_author') {
 			unset ($_COOKIE[$n]);
@@ -223,7 +234,7 @@ function hyper_cache_callback($buffer) {
 		return $buffer;
 	}
 
-	if (strpos($buffer, '</body>') === false)
+	if (strpos($buffer, '</body>' && !is_feed()) === false)
 		return $buffer;
 
 	// WP is sending a redirect
@@ -272,9 +283,9 @@ function hyper_cache_callback($buffer) {
 		$data['mime'] = 'text/html;charset=' . $hyper_cache['charset'];
 	}
 
-	$buffer .= "<!--\n";
+	$buffer .= "\n<!--\n";
 	$buffer .= "Hyper cache file: $hyper_cache_name\n";
-	$buffer .= "Cache created: " . date('y-m-d h:i:s') . "\n";
+	$buffer .= "Cache created: " . date('d-m-Y H:i:s') . "\n";
 	$buffer .= ' -->';
 
 	$data['html'] = $buffer;
@@ -301,7 +312,7 @@ function hyper_cache_write(& $data) {
 	$file = fopen($hc_file, 'w');
 	fwrite($file, serialize($data));
 	fclose($file);
-	hyper_log_cache('Cache for ' . $data['uri'] . ' writed');
+	hyper_log_cache('Cache writed',2);
 
 	header('Last-Modified: ' . date("r", @ filemtime($hc_file)));
 }
@@ -365,12 +376,26 @@ function hyper_cache_gzdecode($data) {
 	return $unpacked;
 }
 
-function hyper_log_cache($text) {
-	// Uncomment to enable debug log
-	return;
+function hyper_log_cache($msg,$level=2) {
+	global $hyper_uri,$hc_file;
+	/*
+	 * Debug Levels
+	 * 0 - Critical error
+	 * 1 - Warning
+	 * 2 - Message
+	 * 3 - Debug
+	 */
+	// return;
+	if($_SERVER['REMOTE_ADDR']!='93.152.186.125'){
+		// return;
+		if($level>2)return;
+	}
 	$file = fopen(dirname(__FILE__) . '/log-cache.txt', 'a');
-	$text = '[' . date('Y.m.d H:i') . ']' . $text;
-	fwrite($file, $text . "\n");
+	$text = '[' . date('Y.m.d H:i') . ']['.$_SERVER['REMOTE_ADDR']."]\n";
+	$text.= "CF: $hc_file\n";
+	$text.= "URL: ".urldecode($hyper_uri)."\n";
+	$text.= $msg;
+	fwrite($file, $text . "\n\n");
 	fclose($file);
 }
 ?>
