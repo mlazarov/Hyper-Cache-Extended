@@ -234,7 +234,7 @@ function hyper_cache_callback($buffer) {
 		return $buffer;
 	}
 
-	if (strpos($buffer, '</body>' && !is_feed()) === false)
+	if (strpos($buffer, '</body>')=== false && !is_feed())
 		return $buffer;
 
 	// WP is sending a redirect
@@ -385,8 +385,11 @@ function hyper_log_cache($msg,$level=2) {
 	 * 2 - Message
 	 * 3 - Debug
 	 */
-	return;
-	
+	// return;
+	//if($_SERVER['REMOTE_ADDR']!='93.152.186.125'){
+		// return;
+		if($level>1)return;
+	//}
 	$file = fopen(dirname(__FILE__) . '/log-cache.txt', 'a');
 	$text = '[' . date('Y.m.d H:i') . ']['.$_SERVER['REMOTE_ADDR']."]\n";
 	$text.= "CF: $hc_file\n";
