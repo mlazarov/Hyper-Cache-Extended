@@ -33,7 +33,7 @@ Changelog
 See the readme.txt.
 
 */
-define('HYPER_CACHE_EXTENDED', '0.9.0');
+define('HYPER_CACHE_EXTENDED', '0.9.1');
 
 $hyper_invalidated = false;
 $hyper_invalidated_post_id = null;
