@@ -107,7 +107,7 @@ printf(__('You can find more details about configurations and working mode
     <td>
 	    <form method="post" action="">
 		<?php echo hyper_count(); ?> <small>(<?php _e('valid and expired'); ?>)</small>
-	    <input class="button" type="submit" name="clean" disabled="disabled" value="<?php _e('Clear cache', 'hyper-cache'); ?>">
+	    <input class="button" type="submit" name="clean" value="<?php _e('Clear cache', 'hyper-cache'); ?>">
 	    <i>(<?php _e('Warning: deleting the cache can lead to high load on the server'); ?>)
 	</form>
     </td>
