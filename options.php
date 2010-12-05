@@ -12,10 +12,14 @@ if (isset ($_POST['clean'])) {
 
 if (isset ($_POST['autoclean_enable'])) {
 	wp_schedule_event(time()+60, 'hourly', 'hyper_clean');
+	$options['enable_clean'] = 1;
+	update_option('hyper', $options);
 }
 
 if (isset ($_POST['autoclean_disable'])) {
 	wp_clear_scheduled_hook('hyper_clean');
+	$options['enable_clean'] = 0;
+	update_option('hyper', $options);
 }
 
 $error = false;
