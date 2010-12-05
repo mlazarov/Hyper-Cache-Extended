@@ -10,6 +10,14 @@ if (isset ($_POST['clean'])) {
 	hyper_delete_path($hyper_cache['path']);
 }
 
+if (isset ($_POST['autoclean_enable'])) {
+	wp_schedule_event(time()+60, 'hourly', 'hyper_clean');
+}
+
+if (isset ($_POST['autoclean_disable'])) {
+	wp_clear_scheduled_hook('hyper_clean');
+}
+
 $error = false;
 $saved = false;
 if (isset ($_POST['save'])) {
@@ -81,7 +89,7 @@ printf(__('You can find more details about configurations and working mode
 ?>
 </p//-->
 
-<form method="post" action="">
+
 <?php wp_nonce_field(); ?>
 
 <h3><?php _e('Cache status', 'hyper-cache'); ?></h3>
@@ -91,8 +99,24 @@ printf(__('You can find more details about configurations and working mode
     <td><?php echo $hyper_cache['path']; ?></td>
 </tr>
 <tr valign="top">
-    <th><?php _e('Files in cache (valid and expired)', 'hyper-cache'); ?></th>
-    <td><?php echo hyper_count(); ?></td>
+    <th><?php _e('Files in cache', 'hyper-cache'); ?></th>
+    <td>
+	    <form method="post" action="">
+		<?php echo hyper_count(); ?> <small>(<?php _e('valid and expired'); ?>)</small>
+	    <input class="button" type="submit" name="clean" disabled="disabled" value="<?php _e('Clear cache', 'hyper-cache'); ?>">
+	    <i>(<?php _e('Warning: deleting the cache can lead to high load on the server'); ?>)
+	</form>
+    </td>
+</tr>
+<?
+$space = disk_total_space($hyper_cache['path']);
+$space_free = disk_free_space($hyper_cache['path']);
+$mb = 1024*1024;
+$perc = round((100/$space)*$space_free,2);
+?>
+<tr valign="top">
+    <th><?php _e('Free space', 'hyper-cache'); ?></th>
+    <td><?=$perc;?>% <small>(<?=round($space_free/$mb);?>MB from <?=round($space/$mb);?>MB)</small></td>
 </tr>
 <tr valign="top">
     <th><?php _e('Server Load', 'hyper-cache'); ?></th>
@@ -103,13 +127,22 @@ printf(__('You can find more details about configurations and working mode
 </tr>
 <tr valign="top">
     <th>Cleaning process</th>
-    <td>Next run on: <?php echo gmdate(get_option('date_format') . ' ' . get_option('time_format'), wp_next_scheduled('hyper_clean') + get_option('gmt_offset')*3600); ?></td>
+    <td><form method="post" action=""><?php
+    if(wp_next_scheduled('hyper_clean')){
+    	echo 'Next run on: '.gmdate(get_option('date_format') . ' ' . get_option('time_format'), wp_next_scheduled('hyper_clean') + get_option('gmt_offset')*3600); 
+    	?>
+    	<input class="button" type="submit" name="autoclean_disable" value="<?php _e('Disable', 'hyper-cache'); ?>">
+    	<?
+    }else{
+    	?>
+    	Not enabled
+		<input class="button" type="submit" name="autoclean_enable" value="<?php _e('Enable', 'hyper-cache'); ?>">
+    	<?
+    }
+    ?><br/><i><?php _e('Enable/Disable auto purging of old files. Enable cleaning process to remove expired cache. This will free some space, but it\'s better to keep this Disabled', 'hyper-cache'); ?></i></from></td>
 </tr>
 </table>
-<p class="submit">
-    <input class="button" type="submit" name="clean" value="<?php _e('Clear cache', 'hyper-cache'); ?>">
-</p>
-</form>
+
 
 <h3><?php _e('Configuration'); ?></h3>
 

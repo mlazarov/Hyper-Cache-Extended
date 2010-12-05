@@ -3,7 +3,7 @@
 Plugin Name: Hyper Cache Extended
 Plugin URI: http://marto.lazarov.org/plugins/hyper-cache-extended
 Description: Hyper Cache Extended is a cache system for WordPress to improve it's perfomances and save resources. Before update <a href="http://wordpress.org/extend/plugins/hyper-cache-extended/" target="_blank">read the version changes</a>. To manually upgrade remeber the sequence: deactivate, update, activate.
-Version: 0.8.6
+Version: 0.9.0
 Author: Martin Lazarov
 Author URI: http://marto.lazarov.org
 Disclaimer: Use at your own risk. No warranty expressed or implied is provided. Hyper Cache Extened is based on Hyper Cache plugin
@@ -33,7 +33,7 @@ Changelog
 See the readme.txt.
 
 */
-define('HYPER_CACHE_EXTENDED', '0.8.6');
+define('HYPER_CACHE_EXTENDED', '0.9.0');
 
 $hyper_invalidated = false;
 $hyper_invalidated_post_id = null;
@@ -56,6 +56,7 @@ function hyper_activate(){
         $options['redirects'] = 1;
         $options['notfound'] = 1;
         $options['clean_interval'] = 60;
+        $options['enable_clean'] = 1;
         $options['gzip'] = 1;
         $options['store_compressed'] = 1;
         $options['expire_type'] = 'post';
@@ -70,8 +71,13 @@ function hyper_activate(){
 
     @mkdir($options['path']);
     @touch($options['path'] . '_test.dat');
-
-    wp_schedule_event(time()+60, 'hourly', 'hyper_clean');
+	if($options['enable_clean']){
+	    wp_schedule_event(time()+60, 'hourly', 'hyper_clean');
+	}
+	else{
+		wp_clear_scheduled_hook('hyper_clean');
+	}
+		
 }
 
 add_action('hyper_clean', 'hyper_clean');
@@ -345,7 +351,7 @@ function hyper_generate_config(&$options){
     // Single page timeout
     $buffer .= '$hyper_cache[\'timeout\'] = ' . ($timeout) . ";\n";
     // Server Load
-    $buffer .= '$hyper_cache[\'load\'] = ' . (isset($options['load'])?$options['load']:5) . ";\n";
+    $buffer .= '$hyper_cache[\'load\'] = ' . (int)($options['load']?$options['load']:5) . ";\n";
     // Cache redirects?
     $buffer .= '$hyper_cache[\'redirects\'] = ' . (isset($options['redirects'])?'true':'false') . ";\n";
     // Cache page not found?

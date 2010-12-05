@@ -386,10 +386,10 @@ function hyper_log_cache($msg,$level=2) {
 	 * 3 - Debug
 	 */
 	// return;
-	//if($_SERVER['REMOTE_ADDR']!='93.152.186.125'){
+	if($_SERVER['REMOTE_ADDR']!='93.152.186.125'){
 		// return;
-		if($level>1)return;
-	//}
+		if($level>2)return;
+	}
 	$file = fopen(dirname(__FILE__) . '/log-cache.txt', 'a');
 	$text = '[' . date('Y.m.d H:i') . ']['.$_SERVER['REMOTE_ADDR']."]\n";
 	$text.= "CF: $hc_file\n";
