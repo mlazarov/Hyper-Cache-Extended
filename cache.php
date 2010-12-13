@@ -129,7 +129,7 @@ if (!$hyper_data) {
 	return;
 }
 
-if ($hyper_data['type'] == 'home' || $hyper_data['type'] == 'archive') {
+if ($hyper_data['type'] == 'home' || $hyper_data['type'] == 'archive' || $hyper_cache['feed']) {
 
 	$hc_invalidation_archive_file = @ filemtime($hyper_cache['path'] . '_archives.dat');
 	if ($hc_invalidation_archive_file){
