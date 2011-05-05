@@ -3,7 +3,7 @@
 Plugin Name: Hyper Cache Extended
 Plugin URI: http://marto.lazarov.org/plugins/hyper-cache-extended
 Description: Hyper Cache Extended is a cache system for WordPress to improve it's perfomances and save resources. Before update <a href="http://wordpress.org/extend/plugins/hyper-cache-extended/" target="_blank">read the version changes</a>. To manually upgrade remeber the sequence: deactivate, update, activate.
-Version: 0.9.2
+Version: 0.9.3
 Author: Martin Lazarov
 Author URI: http://marto.lazarov.org
 Disclaimer: Use at your own risk. No warranty expressed or implied is provided. Hyper Cache Extened is based on Hyper Cache plugin
@@ -162,7 +162,7 @@ if (is_admin()){
 
 add_filter("plugin_action_links_hyper-cache-extended/plugin.php", 'hyper_plugin_action_links');
 function hyper_plugin_action_links($links){
-    $settings_link = '<a href="options-general.php?page=hyper-cache-extended/options.php">' . __( 'Settings' ) . '</a>';
+    $settings_link = '<a href="admin.php?page=hyper-cache-extended/options.php">' . __( 'Settings' ) . '</a>';
     array_unshift($links, $settings_link);
     return $links;
 }
