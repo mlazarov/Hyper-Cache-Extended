@@ -1,10 +1,10 @@
 === Hyper Cache Extended===
 Tags: cache,chaching,speed,performance,super cache,wp cache
 Requires at least: 2.5
-Tested up to: 3.1.2
+Tested up to: 3.2.1
 Stable tag: trunk
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2545483
-Contributors: mlazarov, satollo
+Contributors: mlazarov
 
 Hyper Cache Extended is flexible and easy to configure cache system for WordPress. It's aim is to work on any installation.
 

@@ -112,7 +112,7 @@ printf(__('You can find more details about configurations and working mode
 	</form>
     </td>
 </tr>
-<?
+<?php
 $space = disk_total_space($hyper_cache['path']);
 $space_free = disk_free_space($hyper_cache['path']);
 $mb = 1024*1024;
@@ -120,7 +120,7 @@ $perc = round((100/$space)*$space_free,2);
 ?>
 <tr valign="top">
     <th><?php _e('Free space', 'hyper-cache'); ?></th>
-    <td><?=$perc;?>% <small>(<?=round($space_free/$mb);?>MB from <?=round($space/$mb);?>MB)</small></td>
+    <td><?=$perc;?>% <small>(<?php echo round($space_free/$mb);?>MB from <?php echo round($space/$mb);?>MB)</small></td>
 </tr>
 <tr valign="top">
     <th><?php _e('Server Load', 'hyper-cache'); ?></th>
@@ -136,12 +136,12 @@ $perc = round((100/$space)*$space_free,2);
     	echo 'Next run on: '.gmdate(get_option('date_format') . ' ' . get_option('time_format'), wp_next_scheduled('hyper_clean') + get_option('gmt_offset')*3600); 
     	?>
     	<input class="button" type="submit" name="autoclean_disable" value="<?php _e('Disable', 'hyper-cache'); ?>">
-    	<?
+    	<?php
     }else{
     	?>
     	Not enabled
 		<input class="button" type="submit" name="autoclean_enable" value="<?php _e('Enable', 'hyper-cache'); ?>">
-    	<?
+    	<?php
     }
     ?><br/><i><?php _e('Enable/Disable auto purging of old files. Enable cleaning process to remove expired cache. This will free some space, but it\'s better to keep this Disabled', 'hyper-cache'); ?></i></from></td>
 </tr>
