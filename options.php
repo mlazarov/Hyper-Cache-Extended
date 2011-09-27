@@ -108,7 +108,7 @@ $perc = @round((100/$space)*$space_free,2);
 ?>
 <tr valign="top">
     <th><?php _e('Free space', 'hyper-cache'); ?></th>
-    <td><?=$perc;?>% <small>(<?php echo humanReadableOctets($space_free);?>MB from <?php echo humanReadableOctets($space);?>MB)</small></td>
+    <td><?=$perc;?>% <small>(<?php echo humanReadableOctets($space_free);?> from <?php echo humanReadableOctets($space);?>)</small></td>
 </tr>
 <tr valign="top">
     <th><?php _e('Server Load', 'hyper-cache'); ?></th>
