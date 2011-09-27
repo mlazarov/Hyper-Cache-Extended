@@ -82,19 +82,8 @@ if ($saved) {
 if (!@ touch($hyper_cache['path'] . '/_test.dat')) {
 	echo '<p><strong>Hyper Cache was not able to create files in the folder "cache" in its installation dir. Make it writable (eg. chmod 777).</strong></p>';
 }
+wp_nonce_field();
 ?>
-<!--iframe width="100%" height="120" src="http://www.satollo.net/services/hyper-cache" style="border: 1px solid #ccc"></iframe//-->
-
-<!--p>
-    <?php
-
-printf(__('You can find more details about configurations and working mode
-    on <a href="%s">Hyper Cache official page</a>.', 'hyper-cache'), 'http://www.satollo.net/plugins/hyper-cache');
-?>
-</p//-->
-
-
-<?php wp_nonce_field(); ?>
 
 <h3><?php _e('Cache status', 'hyper-cache'); ?></h3>
 <table class="form-table">
@@ -113,14 +102,13 @@ printf(__('You can find more details about configurations and working mode
     </td>
 </tr>
 <?php
-$space = disk_total_space($hyper_cache['path']);
-$space_free = disk_free_space($hyper_cache['path']);
-$mb = 1024*1024;
-$perc = round((100/$space)*$space_free,2);
+$space = @disk_total_space($hyper_cache['path']);
+$space_free = @disk_free_space($hyper_cache['path']);
+$perc = @round((100/$space)*$space_free,2);
 ?>
 <tr valign="top">
     <th><?php _e('Free space', 'hyper-cache'); ?></th>
-    <td><?=$perc;?>% <small>(<?php echo round($space_free/$mb);?>MB from <?php echo round($space/$mb);?>MB)</small></td>
+    <td><?=$perc;?>% <small>(<?php echo humanReadableOctets($space_free);?>MB from <?php echo humanReadableOctets($space);?>MB)</small></td>
 </tr>
 <tr valign="top">
     <th><?php _e('Server Load', 'hyper-cache'); ?></th>
@@ -133,7 +121,7 @@ $perc = round((100/$space)*$space_free,2);
     <th>Cleaning process</th>
     <td><form method="post" action=""><?php
     if(wp_next_scheduled('hyper_clean')){
-    	echo 'Next run on: '.gmdate(get_option('date_format') . ' ' . get_option('time_format'), wp_next_scheduled('hyper_clean') + get_option('gmt_offset')*3600); 
+    	echo 'Next run on: '.gmdate(get_option('date_format') . ' ' . get_option('time_format'), wp_next_scheduled('hyper_clean') + get_option('gmt_offset')*3600);
     	?>
     	<input class="button" type="submit" name="autoclean_disable" value="<?php _e('Disable', 'hyper-cache'); ?>">
     	<?php
@@ -218,7 +206,7 @@ $perc = round((100/$space)*$space_free,2);
         <?php _e('When enabled the blog feeds will be cache as well.', 'hyper-cache'); ?>
         <?php _e('Usually this options has to be left unchecked but if your blog is rather static,
         you can enable it and have a bit more efficiency', 'hyper-cache');?>
-    </td>    
+    </td>
 </tr>
 </table>
 <p class="submit">
@@ -451,3 +439,11 @@ _e('It seems you have Facebook Connect plugin installed. Add this cookie name to
 </p>
 </form>
 </div>
+<?
+function humanReadableOctets($octets){
+	if(!$octets) return 'n/a';
+	$units = array('B', 'kB', 'MB', 'GB', 'TB'); // ...etc
+
+	for ($i = 0, $size =$octets; $size>1024; $size=$size/1024) $i++;
+	return number_format($size, 2) . ' ' . $units[min($i, count($units) -1 )];
+}
