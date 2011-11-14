@@ -3,7 +3,7 @@
 Plugin Name: Hyper Cache Extended
 Plugin URI: http://marto.lazarov.org/plugins/hyper-cache-extended
 Description: Hyper Cache Extended is a cache system for WordPress to improve it's perfomances and save resources. Before update <a href="http://wordpress.org/extend/plugins/hyper-cache-extended/" target="_blank">read the version changes</a>. To manually upgrade remeber the sequence: deactivate, update, activate.
-Version: 0.9.5
+Version: 0.9.6
 Author: Martin Lazarov
 Author URI: http://marto.lazarov.org
 Disclaimer: Use at your own risk. No warranty expressed or implied is provided. Hyper Cache Extened is based on Hyper Cache plugin
@@ -26,14 +26,11 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
----
-Changelog
----
-
-See the readme.txt.
+=== Changelog ===
+See readme.txt
 
 */
-define('HYPER_CACHE_EXTENDED', '0.9.5');
+define('HYPER_CACHE_EXTENDED', '0.9.6');
 
 $hyper_invalidated = false;
 $hyper_invalidated_post_id = null;
@@ -170,8 +167,8 @@ function hyper_plugin_action_links($links){
 add_action('admin_menu', 'hyper_admin_menu');
 function hyper_admin_menu(){
 	$hook=add_submenu_page('index.php','Hyper Cache E','Hyper Cache E','manage_options','hyper-cache-extended/options.php');
-    add_action('hook-'.$hook,'hyper-cache-extended','options');
-    //add_options_page('Hyper Cache', 'Hyper Cache Extended', 'manage_options', 'hyper-cache-extended/options.php');
+	add_action('hook-'.$hook,'hyper-cache-extended','options');
+	//add_options_page('Hyper Cache', 'Hyper Cache Extended', 'manage_options', 'hyper-cache-extended/options.php');
 }
 
 // Completely invalidate the cache. The hyper-cache directory is renamed
@@ -328,8 +325,8 @@ function hyper_log($text){
 	// comment this return; to turn on loging
 	return;
 	$file = fopen(dirname(__FILE__) . '/log.txt', 'a');
-    fwrite($file, $text . "\n");
-    fclose($file);
+	fwrite($file, $text . "\n");
+	fclose($file);
 }
 
 function hyper_generate_config(&$options){

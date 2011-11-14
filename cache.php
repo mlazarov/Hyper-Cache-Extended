@@ -5,6 +5,8 @@ global $hyper_cache_stop;
 
 $hyper_cache_stop = false;
 
+define('HYPER_CACHE_EXTENDED', '0.9.6');
+
 hyper_log_cache('hyper cache init',3);
 
 // Do not cache post request (comments, plugins and so on)
@@ -286,7 +288,8 @@ function hyper_cache_callback($buffer) {
 	$buffer .= "\n<!--\n";
 	$buffer .= "Hyper cache file: $hyper_cache_name\n";
 	$buffer .= "Cache created: " . date('d-m-Y H:i:s') . "\n";
-	$buffer .= ' -->';
+	$buffer .= "HCE Version: ".HYPER_CACHE_EXTENDED . "\n";
+	$buffer .= '-->';
 
 	$data['html'] = $buffer;
 

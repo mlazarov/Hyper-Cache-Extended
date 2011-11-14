@@ -70,6 +70,11 @@ WordPress forum, too, but I read it rarely.
 
 I'm collection tips and FAQ on [this page](http://wordpress.org/extend/plugins/hyper-cache-extended/) 
 so I can update it more easly.
+
+=== Changelog ===
+= 0.9.6 =
+* Short tag Bugfixes (10x to joanne123)
+
     
 == Screenshots ==
 
