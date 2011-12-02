@@ -87,10 +87,10 @@ if (!@ touch($hyper_cache['path'] . '/_test.dat')) {
 $loadavg = explode(' ',@file_get_contents('/proc/loadavg'));
 
 if($options['load']<$loadavg[0]){
-    echo '<p><span style="color:red">Warning:</span> ';
+    echo '<div class="error fade" style><p><span style="color:red">Warning:</span> ';
     echo 'Your server load is above `Max server load average` config option<br/>';
     echo "Your cache will NOT be recreated until server load goest below <b>".$options['load'].'</b>';
-    echo '</span></p>';
+    echo '</span></p></div>';
 }
 
 
