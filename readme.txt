@@ -72,6 +72,8 @@ I'm collection tips and FAQ on [this page](http://wordpress.org/extend/plugins/h
 so I can update it more easly.
 
 == Changelog ==
+= 0.9.8 -
+* Updated warning message
 = 0.9.7 =
 * Added warning to inform when server load goest over "Max server load average" config option
 = 0.9.6 =

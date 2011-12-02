@@ -76,12 +76,21 @@ if ($error) {
 if ($saved) {
 	echo '<p><strong>Options saved</strong></p>';
 }
+
 ?>
 <?php
 
 if (!@ touch($hyper_cache['path'] . '/_test.dat')) {
 	echo '<p><strong>Hyper Cache was not able to create files in the folder "cache" in its installation dir. Make it writable (eg. chmod 777).</strong></p>';
 }
+if($options['load']<$loadavg[0]){
+    echo '<p><span style="color:red">Warning:</span> ';
+    echo 'Your server load is above `Max server load average` config option<br/>';
+    echo "Your cache will NOT be recreated until server load goest below <b>".$options['load'].'</b>';
+    echo '</span></p>';
+}
+
+
 wp_nonce_field();
 ?>
 
@@ -113,16 +122,10 @@ $perc = @round((100/$space)*$space_free,2);
 <tr valign="top">
     <th><?php _e('Server Load', 'hyper-cache'); ?></th>
     <td><?php
+
     $loadavg = explode(' ',@file_get_contents('/proc/loadavg'));
     if($options['load']<$loadavg[0]) echo '><span style="color:red">'.(float)$loadavg[0].'</span>';
     else echo (float)$loadavg[0];
-
-    if($options['load']<$loadavg[0]){
-        echo '<br/><span style="color:red">Warning:</span> ';
-        echo 'Your server load is above `Max server load average` config option<br/>';
-        echo "Your cache will NOT be recreated until server load goest below <b>".$options['load'].'</b>';
-        echo '</span>';
-    }
 
 	?></td>
 </tr>

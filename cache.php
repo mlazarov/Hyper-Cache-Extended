@@ -5,7 +5,7 @@ global $hyper_cache_stop;
 
 $hyper_cache_stop = false;
 
-define('HYPER_CACHE_EXTENDED', '0.9.7');
+define('HYPER_CACHE_EXTENDED', '0.9.8');
 
 hyper_log_cache('hyper cache init',3);
 
