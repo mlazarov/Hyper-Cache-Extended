@@ -83,6 +83,9 @@ if ($saved) {
 if (!@ touch($hyper_cache['path'] . '/_test.dat')) {
 	echo '<p><strong>Hyper Cache was not able to create files in the folder "cache" in its installation dir. Make it writable (eg. chmod 777).</strong></p>';
 }
+
+$loadavg = explode(' ',@file_get_contents('/proc/loadavg'));
+
 if($options['load']<$loadavg[0]){
     echo '<p><span style="color:red">Warning:</span> ';
     echo 'Your server load is above `Max server load average` config option<br/>';
@@ -123,8 +126,7 @@ $perc = @round((100/$space)*$space_free,2);
     <th><?php _e('Server Load', 'hyper-cache'); ?></th>
     <td><?php
 
-    $loadavg = explode(' ',@file_get_contents('/proc/loadavg'));
-    if($options['load']<$loadavg[0]) echo '><span style="color:red">'.(float)$loadavg[0].'</span>';
+    if($options['load']<$loadavg[0]) echo '<span style="color:red">'.(float)$loadavg[0].'</span>';
     else echo (float)$loadavg[0];
 
 	?></td>
