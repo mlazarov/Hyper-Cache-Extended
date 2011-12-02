@@ -5,7 +5,7 @@ global $hyper_cache_stop;
 
 $hyper_cache_stop = false;
 
-define('HYPER_CACHE_EXTENDED', '0.9.6');
+define('HYPER_CACHE_EXTENDED', '0.9.7');
 
 hyper_log_cache('hyper cache init',3);
 
@@ -283,12 +283,15 @@ function hyper_cache_callback($buffer) {
 		$data['mime'] = 'text/xml;charset=' . $hyper_cache['charset'];
 	} else {
 		$data['mime'] = 'text/html;charset=' . $hyper_cache['charset'];
-	}
+    }
+
+    $loadavg = explode(' ',@file_get_contents('/proc/loadavg'));
 
 	$buffer .= "\n<!--\n";
 	$buffer .= "Hyper cache file: $hyper_cache_name\n";
 	$buffer .= "Cache created: " . date('d-m-Y H:i:s') . "\n";
-	$buffer .= "HCE Version: ".HYPER_CACHE_EXTENDED . "\n";
+    $buffer .= "HCE Version: ".HYPER_CACHE_EXTENDED . "\n";
+    $buffer .= "Load AVG: ".(float)$loadavg[0]."(".$hyper_cache['load'].")\n";
 	$buffer .= '-->';
 
 	$data['html'] = $buffer;
