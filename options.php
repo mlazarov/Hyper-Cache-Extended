@@ -114,9 +114,11 @@ $perc = @round((100/$space)*$space_free,2);
     <th><?php _e('Server Load', 'hyper-cache'); ?></th>
     <td><?php
     $loadavg = explode(' ',@file_get_contents('/proc/loadavg'));
-    echo (float)$loadavg[0];
+    if($options['load']<$loadavg[0]) echo '><span style="color:red">'.(float)$loadavg[0].'</span>';
+    else echo (float)$loadavg[0];
+
     if($options['load']<$loadavg[0]){
-        echo '<span style="color:red">Warning:</span> ';
+        echo '<br/><span style="color:red">Warning:</span> ';
         echo 'Your server load is above `Max server load average` config option<br/>';
         echo "Your cache will NOT be recreated until server load goest below <b>".$options['load'].'</b>';
         echo '</span>';
