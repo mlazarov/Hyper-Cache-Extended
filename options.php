@@ -126,7 +126,7 @@ $perc = @round((100/$space)*$space_free,2);
     <th><?php _e('Server Load', 'hyper-cache'); ?></th>
     <td><?php
 
-    if($options['load']<$loadavg[0]) echo '<span style="color:red">'.(float)$loadavg[0].'</span>';
+    if($options['load']<$loadavg[0]) echo '<span style="color:red"><b>'.(float)$loadavg[0].'</b></span>';
     else echo (float)$loadavg[0];
 
 	?></td>
