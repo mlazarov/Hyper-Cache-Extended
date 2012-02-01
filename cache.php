@@ -1,6 +1,13 @@
 <?php
+/**
+ * Hyper Cache extended
+ * see readme for more inforation about this plugin
+ *
+ * http://marto.lazarov.org/plugins/hyper-cache-extended/
+ * http://wordpress.org/extend/plugins/hyper-cache-extended/
+ *
+ */
 
-// http://wordpress.org/extend/plugins/hyper-cache-extended/
 global $hyper_cache_stop;
 
 $hyper_cache_stop = false;
@@ -14,8 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST')
 	return false;
 
 // Try to avoid enabling the cache if sessions are managed with request parameters and a session is active
-if (defined(SID) && SID != ''){
-	hyper_log_cache('SID found returning',2);
+if (defined('SID') && SID != ''){
+	hyper_log_cache('SID found returning',3);
 	return false;
 }
 
@@ -236,7 +243,7 @@ function hyper_cache_callback($buffer) {
 		return $buffer;
 	}
 
-	if (strpos($buffer, '</body>')=== false && !is_feed())
+	if (strpos($buffer, '</body>')=== false && (function_exists('is_feed') && !is_feed()))
 		return $buffer;
 
 	// WP is sending a redirect
@@ -252,14 +259,14 @@ function hyper_cache_callback($buffer) {
 		return $buffer;
 	}
 
-	if (is_feed() && !$hyper_cache['feed']) {
+	if ((function_exists('is_feed') && !is_feed()) && !$hyper_cache['feed']) {
 		return $buffer;
 	}
 
 	if (is_home())
 		$data['type'] = 'home';
 	else
-		if (is_feed())
+		if ((function_exists('is_feed') && !is_feed()))
 			$data['type'] = 'feed';
 		else
 			if (is_archive())
@@ -396,7 +403,12 @@ function hyper_log_cache($msg,$level=2) {
 		// return;
 		if($level>2)return;
 	}
-	$file = fopen(dirname(__FILE__) . '/log-cache.txt', 'a');
+	$file_name = dirname(__FILE__) . '/log-cache.txt';
+
+	if(file_exists($file_name) && !is_writable($file_name)) return false;
+
+	$file = fopen($file_name, 'a');
+
 	$text = '[' . date('Y.m.d H:i') . ']['.$_SERVER['REMOTE_ADDR']."]\n";
 	$text.= "CF: $hc_file\n";
 	$text.= "URL: ".urldecode($hyper_uri)."\n";

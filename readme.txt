@@ -1,7 +1,7 @@
 === Hyper Cache Extended===
 Tags: cache,chaching,speed,performance,super cache,wp cache
 Requires at least: 2.5
-Tested up to: 3.2.1
+Tested up to: 3.3.1
 Stable tag: trunk
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2545483
 Contributors: mlazarov
@@ -71,11 +71,19 @@ WordPress forum, too, but I read it rarely.
 I'm collection tips and FAQ on [this page](http://wordpress.org/extend/plugins/hyper-cache-extended/) 
 so I can update it more easly.
 
+What is Max Server Load Average? Read on [this page](http://marto.lazarov.org/plugins/hyper-cache-extended/max-server-load-average) [bg]
+
 == Changelog ==
-= 0.9.8 -
+
+= 0.9.9 =
+* Bugfixes
+
+= 0.9.8 =
 * Updated warning message
+
 = 0.9.7 =
 * Added warning to inform when server load goest over "Max server load average" config option
+
 = 0.9.6 =
 * Short tag Bugfixes (10x to joanne123)
 

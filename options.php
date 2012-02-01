@@ -1,4 +1,13 @@
 <?php
+/**
+ * Hyper Cache extended
+ * see readme for more inforation about this plugin
+ *
+ * http://marto.lazarov.org/plugins/hyper-cache-extended/
+ * http://wordpress.org/extend/plugins/hyper-cache-extended/
+ *
+ */
+
 $options = get_option('hyper');
 
 if (!$options['notranslation']) {
