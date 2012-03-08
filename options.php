@@ -1,6 +1,6 @@
 <?php
 /**
- * Hyper Cache extended
+ * Hyper Cache Extended
  * see readme for more inforation about this plugin
  *
  * http://marto.lazarov.org/plugins/hyper-cache-extended/
@@ -9,6 +9,8 @@
  */
 
 $options = get_option('hyper');
+
+echo WP_CONTENT_DIR;
 
 if (!$options['notranslation']) {
 	$plugin_dir = basename(dirname(__FILE__));
@@ -53,7 +55,7 @@ if (isset ($_POST['save'])) {
 
 	$buffer = hyper_generate_config($options);
 
-	$file = @ fopen(ABSPATH . 'wp-content/advanced-cache.php', 'w');
+	$file = @ fopen(WP_CONTENT_DIR . '/advanced-cache.php', 'w');
 	if ($file) {
 		@ fwrite($file, $buffer);
 		@ fclose($file);

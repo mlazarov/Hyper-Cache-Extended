@@ -40,6 +40,7 @@ $hyper_invalidated_post_id = null;
 // (eg. for wrong permission on file system) the options page will give a
 // warning.
 register_activation_hook(__FILE__, 'hyper_activate');
+
 function hyper_activate(){
     $options = get_option('hyper');
 
@@ -62,7 +63,7 @@ function hyper_activate(){
     }
 
     $buffer = hyper_generate_config($options);
-    $file = @fopen(ABSPATH . 'wp-content/advanced-cache.php', 'w');
+    $file = @fopen(WP_CONTENT_DIR . '/advanced-cache.php', 'w');
     @fwrite($file, $buffer);
     @fclose($file);
 
@@ -78,6 +79,7 @@ function hyper_activate(){
 }
 
 add_action('hyper_clean', 'hyper_clean');
+
 function hyper_clean(){
 	global $hyper_cache;
     // Latest global invalidation (may be false)
@@ -117,13 +119,13 @@ function hyper_clean(){
 register_deactivation_hook(__FILE__, 'hyper_deactivate');
 function hyper_deactivate(){
 	wp_clear_scheduled_hook('hyper_clean');
-	//@unlink(ABSPATH . 'wp-content/advanced-cache.php');
+	//@unlink( WP_CONTENT_DIR. '/advanced-cache.php');
 
 	// We can safely delete the hyper-cache directory, is not more used at this time.
     //hyper_delete_path(dirname(__FILE__) . '/cache');
 
     // burn the file without delete it so one can rewrite it
-    $file = @fopen(ABSPATH . 'wp-content/advanced-cache.php', 'wb');
+    $file = @fopen(WP_CONTENT_DIR . '/advanced-cache.php', 'wb');
     if ($file){
         @fwrite($file, '');
         @fclose($file);
@@ -136,11 +138,11 @@ if (is_admin()){
     if (!is_dir($hyper_cache['path'])){
     	@mkdir($hyper_cache['path']);
     	if (!is_dir($hyper_cache['path'])){
-      	  $hyper_notice .= 'Hyper Cache was not able to create the folder "cache" in its installation dir. Create it by hand and make it writable.<br />';
+      	  $hyper_notice .= 'Hyper Cache was not able to create the folder "cache" ('.$hyper_cache['path'].') in its installation dir. Create it by hand and make it writable.<br />';
     	}
     }
 
-    if (!is_file(ABSPATH . 'wp-content/advanced-cache.php')){
+    if (!is_file(WP_CONTENT_DIR . '/advanced-cache.php')){
         $hyper_notice .= 'Your wp-content folder is not writable. Hyper Cache needs to create a file called advanced-cache.php in to that folder in order to work. Make it writable and deactivate and reactivate Hyper Cache.<br />';
     }
 
@@ -289,7 +291,6 @@ function hyper_delete_path($path){
 function hyper_count(){
 	global $hyper_cache;
     $count = 0;
-    //if (!is_dir(ABSPATH . 'wp-content/hyper-cache')) return 0;
     if ($handle = @opendir($hyper_cache['path'])){
         while ($file = readdir($handle)){
             if ($file != '.' && $file != '..'){
@@ -347,7 +348,7 @@ function hyper_generate_config(&$options){
     $buffer .= '$hyper_cache[\'archive\'] = ' . ($options['archive']?'true':'false') . ";\n";
     // Single page timeout
     $buffer .= '$hyper_cache[\'timeout\'] = ' . ($timeout) . ";\n";
-    // Server Load
+    // Server Max Load
     $buffer .= '$hyper_cache[\'load\'] = ' . (int)($options['load']?$options['load']:5) . ";\n";
     // Cache redirects?
     $buffer .= '$hyper_cache[\'redirects\'] = ' . (isset($options['redirects'])?'true':'false') . ";\n";
@@ -457,7 +458,9 @@ function hyper_generate_config(&$options){
         }
     }
 
-    $buffer .= "include(ABSPATH . 'wp-content/plugins/hyper-cache-extended/cache.php');\n";
+    $hpe_dir = pathinfo(__FILE__, PATHINFO_DIRNAME);
+
+    $buffer .= "include(WP_CONTENT_DIR . '/plugins/hyper-cache-extended/cache.php');\n";
     $buffer .= '?>';
 
     return $buffer;
