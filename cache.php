@@ -12,7 +12,6 @@ global $hyper_cache_stop;
 
 $hyper_cache_stop = false;
 
-define('HYPER_CACHE_EXTENDED', '0.9.9');
 
 hyper_log_cache('hyper cache init',3);
 
@@ -30,13 +29,19 @@ $hyper_uri = $_SERVER['REQUEST_URI'];
 $hyper_qs = strpos($hyper_uri, '?');
 
 if ($hyper_qs !== false) {
+
 	if ($hyper_cache['strip_qs'])
 		$hyper_uri = substr($hyper_uri, 0, $hyper_qs);
-	else
-		if (!$hyper_cache['cache_qs']){
+	elseif (!$hyper_cache['cache_qs']){
+		// Check for other than page_id and p queries
+		parse_str($_SERVER['QUERY_STRING'],$argv);
+		if(count($argv)==1 && (isset($argv['page_id']) || isset($argv['p']))){
+			hyper_log_cache('QS found but only ignored items',3);
+		}else{	
 			hyper_log_cache('QS found returning',3);
 			return false;
 		}
+	}
 }
 
 if (strpos($hyper_uri, 'robots.txt') !== false){
@@ -100,8 +105,6 @@ if (strpos($hyper_uri, '/wp-') !== false)
 // We don't support Multisite for now
 if (function_exists('is_multisite') && is_multisite() && strpos($hyper_uri, '/files/') !== false)
 	return false;
-
-$hyper_uri = $_SERVER['HTTP_HOST'] . $hyper_uri;
 
 // The name of the file with html and other data
 $hyper_cache_name = md5($hyper_uri);
@@ -420,11 +423,11 @@ function hyper_log_cache($msg,$level=2) {
 	 * 2 - Message
 	 * 3 - Debug
 	 */
-	// return;
-	if($_SERVER['REMOTE_ADDR']!='93.152.186.125'){
-		return;
-		if($level>10)return;
-	}
+	return;
+	
+	// Log only errors: level > 2
+	if($level>2)return;
+
 	$file_name = dirname(__FILE__) . '/log-cache.txt';
 
 	if(file_exists($file_name) && !is_writable($file_name)) return false;

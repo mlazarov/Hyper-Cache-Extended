@@ -8,9 +8,17 @@
  *
  */
 
-$options = get_option('hyper');
+define('HYPER_CACHE_EXTENDED_OPTIONS','yes');
 
-echo WP_CONTENT_DIR;
+$advanced_cache_file =  WP_CONTENT_DIR . '/advanced-cache.php';
+
+if(!file_exists($advanced_cache_file)){
+	hyper_activate();
+}
+
+include($advanced_cache_file);
+
+$options = $hyper_cache;
 
 if (!$options['notranslation']) {
 	$plugin_dir = basename(dirname(__FILE__));
@@ -21,21 +29,25 @@ if (isset ($_POST['clean'])) {
 	hyper_delete_path($hyper_cache['path']);
 }
 
-if (isset ($_POST['autoclean_enable'])) {
-	wp_schedule_event(time()+60, 'hourly', 'hyper_clean');
-	$options['enable_clean'] = 1;
-	update_option('hyper', $options);
-}
+
 
 if (isset ($_POST['autoclean_disable'])) {
-	wp_clear_scheduled_hook('hyper_clean');
-	$options['enable_clean'] = 0;
-	update_option('hyper', $options);
+	 wp_clear_scheduled_hook('hyper_clean');
+	 $hce_options['enable_clean'] = 0;
+	 update_option('hyper_cache_extended', $hce_options);
 }
+
+if (isset ($_POST['autoclean_enable'])) {
+	wp_schedule_event(time()+60, 'hourly', 'hyper_clean');
+	$hce_options['enable_clean'] = 1;
+	update_option('hyper_cache_extended', $hce_options);
+}
+
 
 $error = false;
 $saved = false;
-if (isset ($_POST['save'])) {
+
+if (isset ($_POST['save'])) {	
 	//if (!check_admin_referer()) die('No hacking please');
 	$tmp = stripslashes_deep($_POST['options']);
 
@@ -63,7 +75,7 @@ if (isset ($_POST['save'])) {
 	} else {
 		$error = true;
 	}
-	update_option('hyper', $options);
+	//update_option('hyper', $options);
 
 	// When the cache does not expire
 	if ($options['expire_type'] == 'none') {
@@ -75,10 +87,13 @@ if (isset ($_POST['save'])) {
 		$options['mobile_agents'] = "elaine/3.0\niphone\nipod\npalm\neudoraweb\nblazer\navantgo\nwindows ce\ncellphone\nsmall\nmmef20\ndanger\nhiptop\nproxinet\nnewt\npalmos\nnetfront\nsharp-tq-gx10\nsonyericsson\nsymbianos\nup.browser\nup.link\nts21i-10\nmot-v\nportalmmm\ndocomo\nopera mini\npalm\nhandspring\nnokia\nkyocera\nsamsung\nmotorola\nmot\nsmartphone\nblackberry\nwap\nplaystation portable\nlg\nmmp\nopwv\nsymbian\nepoc";
 	}
 }
+
+$plugin_data = get_plugin_data(dirname(__FILE__).'/plugin.php');
+$plugin_version = $plugin_data['Version'];
 ?>
 <div class="wrap">
 
-<h2>Hyper Cache Extended <small><?php echo HYPER_CACHE_EXTENDED; ?></small></h2>
+<h2>Hyper Cache Extended <small><?php echo $plugin_version; ?></small></h2>
 <?php
 
 if ($error) {
@@ -109,7 +124,7 @@ wp_nonce_field();
 ?>
 
 <h3><?php _e('Cache status', 'hyper-cache'); ?></h3>
-<table class="form-table">
+<table class="form-table postbox">
 <tr valign="top">
     <th><?php _e('Current cache directory', 'hyper-cache'); ?></th>
     <td><?php echo $hyper_cache['path']; ?></td>
@@ -121,7 +136,7 @@ wp_nonce_field();
 		<?php echo hyper_count(); ?> <small>(<?php _e('valid and expired'); ?>)</small>
 	    <input class="button" type="submit" name="clean" value="<?php _e('Clear cache', 'hyper-cache'); ?>">
 	    <i>(<?php _e('Warning: deleting the cache can lead to high load on the server'); ?>)
-	</form>
+            </form>
     </td>
 </tr>
 <?php
@@ -164,12 +179,12 @@ $perc = @round((100/$space)*$space_free,2);
 <h3><?php _e('Configuration'); ?></h3>
 
 <form method="post" action="">
-<table class="form-table">
+<table class="form-table postbox">
 
 <tr valign="top">
     <th><?php _e('Cached pages timeout', 'hyper-cache'); ?></th>
     <td>
-        <input type="text" size="5" name="options[timeout]" value="<?php echo htmlspecialchars($options['timeout']); ?>"/>
+        <input type="text" size="5" name="options[timeout]" value="<?php echo htmlspecialchars(round($options['timeout']/60)); ?>"/>
         (<?php _e('minutes', 'hyper-cache'); ?>)
         <br />
         <?php _e('Minutes a cached page is valid and served to users. A zero value means a cached page is valid forever.', 'hyper-cache');?>
@@ -239,7 +254,7 @@ $perc = @round((100/$space)*$space_free,2);
 </p>
 
 <h3><?php _e('Configuration for mobile devices', 'hyper-cache'); ?></h3>
-<table class="form-table">
+<table class="form-table postbox">
 <tr valign="top">
     <th>WordPress Mobile Pack</th>
     <td>
@@ -282,7 +297,7 @@ $perc = @round((100/$space)*$space_free,2);
 
 <?php } else { ?>
 
-<table class="form-table">
+<table class="form-table postbox">
 <tr valign="top">
     <th><?php _e('Enable compression', 'hyper-cache'); ?></th>
     <td>
@@ -319,7 +334,7 @@ _e('Only the textual part of a page can be compressed, not images, so a photo
 
 <h3><?php _e('Advanced options', 'hyper-cache'); ?></h3>
 
-<table class="form-table">
+<table class="form-table postbox">
 <tr valign="top">
     <th><?php _e('Translation', 'hyper-cache'); ?></th>
     <td>

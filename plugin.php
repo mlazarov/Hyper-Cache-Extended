@@ -3,7 +3,7 @@
 Plugin Name: Hyper Cache Extended
 Plugin URI: http://marto.lazarov.org/plugins/hyper-cache-extended
 Description: Hyper Cache Extended is a cache system for WordPress to improve it's perfomances and save resources. Before update <a href="http://wordpress.org/extend/plugins/hyper-cache-extended/" target="_blank">read the version changes</a>. To manually upgrade remeber the sequence: deactivate, update, activate.
-Version: 0.9.9
+Version: 1.0.0
 Author: Martin Lazarov
 Author URI: http://marto.lazarov.org
 Disclaimer: Use at your own risk. No warranty expressed or implied is provided. Hyper Cache Extened is based on Hyper Cache plugin
@@ -30,7 +30,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 See readme.txt
 
 */
-define('HYPER_CACHE_EXTENDED', '0.9.9');
 
 $hyper_invalidated = false;
 $hyper_invalidated_post_id = null;
@@ -42,78 +41,67 @@ $hyper_invalidated_post_id = null;
 register_activation_hook(__FILE__, 'hyper_activate');
 
 function hyper_activate(){
-    $options = get_option('hyper');
+	$hce_options = get_option('hyper_cache_extended');
+	
+	$options = array();
+	$options['comment'] = 1;
+	$options['archive'] = 1;
+	$options['timeout'] = 1440;
+        $options['load'] = 5;	
+	$options['redirects'] = 1;	
+	$options['notfound'] = 1;	
+	$options['clean_interval'] = 60;	
+	$options['enable_clean'] = 1;
+	$options['gzip'] = 1;
+	$options['store_compressed'] = 1;
+	$options['expire_type'] = 'post';
+	$options['path'] = WP_CONTENT_DIR.'/cache/';
 
-    if (!is_array($options)) {
-
-        $options = array();
-        $options['comment'] = 1;
-        $options['archive'] = 1;
-        $options['timeout'] = 1440;
-        $options['load'] = 5;
-        $options['redirects'] = 1;
-        $options['notfound'] = 1;
-        $options['clean_interval'] = 60;
-        $options['enable_clean'] = 1;
-        $options['gzip'] = 1;
-        $options['store_compressed'] = 1;
-        $options['expire_type'] = 'post';
-        $options['path'] = dirname(__FILE__).'/cache/';
-        update_option('hyper', $options);
-    }
-
-    $buffer = hyper_generate_config($options);
-    $file = @fopen(WP_CONTENT_DIR . '/advanced-cache.php', 'w');
-    @fwrite($file, $buffer);
-    @fclose($file);
-
-    @mkdir($options['path']);
-    @touch($options['path'] . '_test.dat');
-	if($options['enable_clean']){
-	    wp_schedule_event(time()+60, 'hourly', 'hyper_clean');
+	$buffer = hyper_generate_config($options);
+	$file = @fopen(WP_CONTENT_DIR . '/advanced-cache.php', 'w');
+	@fwrite($file, $buffer);
+	@fclose($file);
+	@mkdir($options['path']);
+	@touch($options['path'] . '_test.dat');
+	if($hce_options['enable_clean']){
+		wp_schedule_event(time()+60, 'hourly', 'hyper_clean');
 	}
 	else{
 		wp_clear_scheduled_hook('hyper_clean');
 	}
-
 }
 
 add_action('hyper_clean', 'hyper_clean');
-
 function hyper_clean(){
 	global $hyper_cache;
-    // Latest global invalidation (may be false)
-    $invalidation_time = @filemtime($hyper_cache['path'] . '/_global.dat');
+	// Latest global invalidation (may be false)
+	
+	$invalidation_time = @filemtime($hyper_cache['path'] . '/_global.dat');
+	hyper_log('start cleaning');
+	$timeout = $hyper_cache['timeout']*60;
 
-    hyper_log('start cleaning');
+	if ($timeout == 0) return;
 
-    $options = get_option('hyper');
+	$time = time();
 
-    $timeout = $options['timeout']*60;
-    if ($timeout == 0) return;
+	$handle = @opendir($hyper_cache['path']);
+	if (!$handle) {
+		hyper_log('unable to open cache dir');
+		return;
+	}
 
-    $time = time();
-
-    $handle = @opendir($hyper_cache['path']);
-    if (!$handle) {
-        hyper_log('unable to open cache dir');
-        return;
-    }
-
-    while ($file = readdir($handle)) {
-        if ($file == '.' || $file == '..' || $file[0] == '_') continue;
-
-        hyper_log('checking ' . $file . ' for cleaning');
-        $t = @filemtime($hyper_cache['path'] . $file);
-        hyper_log('file time ' . $t);
-        if ($time - $t > $timeout || ($invalidation_time && $t < $invalidation_time)) {
-            @unlink($hyper_cache['path'] . $file);
-            hyper_log('cleaned ' . $file);
-        }
-    }
-    closedir($handle);
-
-    hyper_log('end cleaning');
+	while ($file = readdir($handle)) {
+		if ($file == '.' || $file == '..' || $file[0] == '_') continue;
+		hyper_log('checking ' . $file . ' for cleaning');
+		$t = @filemtime($hyper_cache['path'] . $file);
+		hyper_log('file time ' . $t);
+		if ($time - $t > $timeout || ($invalidation_time && $t < $invalidation_time)) {
+			@unlink($hyper_cache['path'] . $file);
+			hyper_log('cleaned ' . $file);
+		}
+	}
+	closedir($handle);
+	hyper_log('end cleaning');
 }
 
 register_deactivation_hook(__FILE__, 'hyper_deactivate');
@@ -122,19 +110,19 @@ function hyper_deactivate(){
 	//@unlink( WP_CONTENT_DIR. '/advanced-cache.php');
 
 	// We can safely delete the hyper-cache directory, is not more used at this time.
-    //hyper_delete_path(dirname(__FILE__) . '/cache');
+	//hyper_delete_path(dirname(__FILE__) . '/cache');
 
-    // burn the file without delete it so one can rewrite it
-    $file = @fopen(WP_CONTENT_DIR . '/advanced-cache.php', 'wb');
-    if ($file){
-        @fwrite($file, '');
-        @fclose($file);
-    }
+	// burn the file without delete it so one can rewrite it
+	$file = @fopen(WP_CONTENT_DIR . '/advanced-cache.php', 'wb');
+	if ($file){
+		@fwrite($file, '');
+		@fclose($file);
+	}
 }
 
 $hyper_notice = '';
 
-if (is_admin()){
+if (is_admin() && isset($hyper_cache)){
     if (!is_dir($hyper_cache['path'])){
     	@mkdir($hyper_cache['path']);
     	if (!is_dir($hyper_cache['path'])){
@@ -212,14 +200,13 @@ function hyper_cache_invalidate_post($post_id){
         return;
     }
 
-    $options = get_option('hyper');
 
-    if ($options['expire_type'] == 'none'){
+    if ($hyper_cache['expire_type'] == 'none'){
         hyper_log("hyper_cache_invalidate_post(" . $post_id . ")> Invalidation disabled");
         return;
     }
 
-    if ($options['expire_type'] == 'post'){
+    if ($hyper_cache['expire_type'] == 'post'){
         $post = get_post($post_id);
 
         $link = get_permalink($post_id);
@@ -249,7 +236,7 @@ function hyper_cache_invalidate_post($post_id){
 
         hyper_log("hyper_cache_invalidate_post(" . $post_id . ")> Post invalidated");
 
-        if ($options['archive']){
+        if ($hyper_cache['archive']){
 
             hyper_log("hyper_cache_invalidate_post(" . $post_id . ")> Archive invalidation required");
 
@@ -263,7 +250,7 @@ function hyper_cache_invalidate_post($post_id){
         return;
     }
 
-    if ($options['expire_type'] == 'all'){
+    if ($hyper_cache['expire_type'] == 'all'){
         hyper_log("hyper_cache_invalidate_post(" . $post_id . ")> Full invalidation");
         hyper_cache_invalidate();
         return;
@@ -332,137 +319,146 @@ function hyper_log($text){
 
 function hyper_generate_config(&$options){
 	global $hyper_cache;
-    $buffer = '';
+	$buffer = '';
+	$timeout = $options['timeout']*60;
+	if ($timeout == 0) $timeout = 2000000000;
 
-    $timeout = $options['timeout']*60;
-    if ($timeout == 0) $timeout = 2000000000;
+	$cache_path = WP_CONTENT_DIR . '/cache/';
 
-    $buffer = "<?php\n";
-    $buffer .= '$hyper_cache[\'path\'] = "' . (isset($hyper_cache['path'])?addslashes($hyper_cache['path']):addslashes(dirname(__FILE__).'/cache/')). "\";\n";
-    $buffer .= '$hyper_cache[\'charset\']= "' . get_option('blog_charset') . '"' . ";\n";
-    // Collect statistics
-    //$buffer .= '$hyper_cache_stats = ' . (isset($options['stats'])?'true':'false') . ";\n";
-    // Do not cache for commenters
-    $buffer .= '$hyper_cache[\'comment\'] = ' . (isset($options['comment'])?'true':'false') . ";\n";
-    // Ivalidate archives on post invalidation
-    $buffer .= '$hyper_cache[\'archive\'] = ' . ($options['archive']?'true':'false') . ";\n";
-    // Single page timeout
-    $buffer .= '$hyper_cache[\'timeout\'] = ' . ($timeout) . ";\n";
-    // Server Max Load
-    $buffer .= '$hyper_cache[\'load\'] = ' . (int)($options['load']?$options['load']:5) . ";\n";
-    // Cache redirects?
-    $buffer .= '$hyper_cache[\'redirects\'] = ' . (isset($options['redirects'])?'true':'false') . ";\n";
-    // Cache page not found?
-    $buffer .= '$hyper_cache[\'notfound\'] = ' . (isset($options['notfound'])?'true':'false') . ";\n";
-    // Separate caching for mobile agents?
-    $buffer .= '$hyper_cache[\'mobile\'] = ' . (isset($options['mobile'])?'true':'false') . ";\n";
-    // WordPress mobile pack integration?
-    $buffer .= '$hyper_cache[\'plugin_mobile_pack\'] = ' . (isset($options['plugin_mobile_pack'])?'true':'false') . ";\n";
-    // Cache the feeds?
-    $buffer .= '$hyper_cache[\'feed\'] = ' . (isset($options['feed'])?'true':'false') . ";\n";
-    // Cache GET request with parameters?
-    $buffer .= '$hyper_cache[\'cache_qs\'] = ' . (isset($options['cache_qs'])?'true':'false') . ";\n";
-    // Strip query string?
-    $buffer .= '$hyper_cache[\'strip_qs\'] = ' . (isset($options['strip_qs'])?'true':'false') . ";\n";
-    // DO NOT cache the home?
-    $buffer .= '$hyper_cache[\'home\'] = ' . (isset($options['home'])?'true':'false') . ";\n";
-    // Disable last modified header
-    $buffer .= '$hyper_cache[\'lastmodified\'] = ' . (isset($options['lastmodified'])?'true':'false') . ";\n";
+	$buffer = "<?php\n";
+	$buffer .= '$hyper_cache[\'path\'] = "' . (isset($hyper_cache['path'])?addslashes($hyper_cache['path']):addslashes($cache_path)). "\";\n";
+	$buffer .= '$hyper_cache[\'charset\']= "' . get_option('blog_charset') . '"' . ";\n";
+	// TODO: Collect statistics
+	//$buffer .= '$hyper_cache_stats = ' . (isset($options['stats'])?'true':'false') . ";\n";
+	// Do not cache for commenters
+	$buffer .= '$hyper_cache[\'comment\'] = ' . (isset($options['comment'])?'true':'false') . ";\n";
+	// Invalidate archives on post invalidation
+	$buffer .= '$hyper_cache[\'archive\'] = ' . ($options['archive']?'true':'false') . ";\n";
+	// Single page timeout
+	$buffer .= '$hyper_cache[\'timeout\'] = ' . ($timeout) . ";\n";
+	// Server Max Load
+	$buffer .= '$hyper_cache[\'load\'] = ' . (int)($options['load']?$options['load']:5) . ";\n";
+	// Expire Type
+	if(!in_array($options['expire_type'],array('post','all','none'))) $options['expire_type'] = 'post';
+	$buffer .= '$hyper_cache[\'expire_type\'] = "' . $options['expire_type']. '"' . ";\n";
+	// Cache redirects?
+	$buffer .= '$hyper_cache[\'redirects\'] = ' . (isset($options['redirects'])?'true':'false') . ";\n";
+	// Cache page not found?
+	$buffer .= '$hyper_cache[\'notfound\'] = ' . (isset($options['notfound'])?'true':'false') . ";\n";
+	// Separate caching for mobile agents?
+	$buffer .= '$hyper_cache[\'mobile\'] = ' . (isset($options['mobile'])?'true':'false') . ";\n";
+	// WordPress mobile pack integration?
+	$buffer .= '$hyper_cache[\'plugin_mobile_pack\'] = ' . (isset($options['plugin_mobile_pack'])?'true':'false') . ";\n";
+	// Cache the feeds?
+	$buffer .= '$hyper_cache[\'feed\'] = ' . (isset($options['feed'])?'true':'false') . ";\n";
+	// Cache GET request with parameters?
+	$buffer .= '$hyper_cache[\'cache_qs\'] = ' . (isset($options['cache_qs'])?'true':'false') . ";\n";
+	// Strip query string?
+	$buffer .= '$hyper_cache[\'strip_qs\'] = ' . (isset($options['strip_qs'])?'true':'false') . ";\n";
+	// DO NOT cache the home?
+	$buffer .= '$hyper_cache[\'home\'] = ' . (isset($options['home'])?'true':'false') . ";\n";
+	// Disable last modified header
+	$buffer .= '$hyper_cache[\'lastmodified\'] = ' . (isset($options['lastmodified'])?'true':'false') . ";\n";
+	
+	if ($options['gzip']) $options['store_compressed'] = 1;
 
-    if ($options['gzip']) $options['store_compressed'] = 1;
+	$buffer .= '$hyper_cache[\'gzip\'] = ' . (isset($options['gzip'])?'true':'false') . ";\n";
+	$buffer .= '$hyper_cache[\'store_compressed\'] = ' . (isset($options['store_compressed'])?'true':'false') . ";\n";
 
-    $buffer .= '$hyper_cache[\'gzip\'] = ' . (isset($options['gzip'])?'true':'false') . ";\n";
-    $buffer .= '$hyper_cache[\'store_compressed\'] = ' . (isset($options['store_compressed'])?'true':'false') . ";\n";
+	//$buffer .= '$hyper_cache_clean_interval = ' . ($options['clean_interval']*60) . ";\n";
 
-    //$buffer .= '$hyper_cache_clean_interval = ' . ($options['clean_interval']*60) . ";\n";
+	if (isset($options['reject']) && trim($options['reject']) != ''){
+		$options['reject'] = str_replace(' ', "\n", $options['reject']);
+		$options['reject'] = str_replace("\r", "\n", $options['reject']);
+		$buffer .= '$hyper_cache_reject = array(';
+		$reject = explode("\n", $options['reject']);
+		$options['reject'] = '';
+		foreach ($reject as $uri){
+			$uri = trim($uri);
+			if ($uri == '') continue;
+			$buffer .= "\"" . addslashes(trim($uri)) . "\",";
+			$options['reject'] .= $uri . "\n";
+		}
+		$buffer = rtrim($buffer, ',');
+		$buffer .= ");\n";
+	}
+	else {
+		$buffer .= '$hyper_cache_reject = false;' . "\n";
+	}
 
-    if (isset($options['reject']) && trim($options['reject']) != ''){
-        $options['reject'] = str_replace(' ', "\n", $options['reject']);
-        $options['reject'] = str_replace("\r", "\n", $options['reject']);
-        $buffer .= '$hyper_cache_reject = array(';
-        $reject = explode("\n", $options['reject']);
-        $options['reject'] = '';
-        foreach ($reject as $uri){
-            $uri = trim($uri);
-            if ($uri == '') continue;
-            $buffer .= "\"" . addslashes(trim($uri)) . "\",";
-            $options['reject'] .= $uri . "\n";
-        }
-        $buffer = rtrim($buffer, ',');
-        $buffer .= ");\n";
-    }
-    else {
-        $buffer .= '$hyper_cache_reject = false;' . "\n";
-    }
+	if (isset($options['reject_agents']) && trim($options['reject_agents']) != ''){
+		$options['reject_agents'] = str_replace(' ', "\n", $options['reject_agents']);
+		$options['reject_agents'] = str_replace("\r", "\n", $options['reject_agents']);
+		$buffer .= '$hyper_cache[\'reject_agents\'] = array(';
+		$reject_agents = explode("\n", $options['reject_agents']);
+		$options['reject_agents'] = '';
+		foreach ($reject_agents as $uri){
+			$uri = trim($uri);
+			if ($uri == '') continue;
+			$buffer .= "\"" . addslashes(strtolower(trim($uri))) . "\",";
+			$options['reject_agents'] .= $uri . "\n";
+		}
+		$buffer = rtrim($buffer, ',');
+		$buffer .= ");\n";
+	}
+	else {
+		$buffer .= '$hyper_cache[\'reject_agents\'] = false;' . "\n";
+	}
 
-    if (isset($options['reject_agents']) && trim($options['reject_agents']) != ''){
-        $options['reject_agents'] = str_replace(' ', "\n", $options['reject_agents']);
-        $options['reject_agents'] = str_replace("\r", "\n", $options['reject_agents']);
-        $buffer .= '$hyper_cache[\'reject_agents\'] = array(';
-        $reject_agents = explode("\n", $options['reject_agents']);
-        $options['reject_agents'] = '';
-        foreach ($reject_agents as $uri){
-            $uri = trim($uri);
-            if ($uri == '') continue;
-            $buffer .= "\"" . addslashes(strtolower(trim($uri))) . "\",";
-            $options['reject_agents'] .= $uri . "\n";
-        }
-        $buffer = rtrim($buffer, ',');
-        $buffer .= ");\n";
-    }
-    else {
-        $buffer .= '$hyper_cache[\'reject_agents\'] = false;' . "\n";
-    }
+    
+	if (isset($options['reject_cookies']) && trim($options['reject_cookies']) != ''){
+		$options['reject_cookies'] = str_replace(' ', "\n", $options['reject_cookies']);
+		$options['reject_cookies'] = str_replace("\r", "\n", $options['reject_cookies']);
+		$buffer .= '$hyper_cache[\'reject_cookies\'] = array(';
+		$reject_cookies = explode("\n", $options['reject_cookies']);
+		$options['reject_cookies'] = '';
+		foreach ($reject_cookies as $c){
+			$c = trim($c);
+			if ($c == '') continue;
+			$buffer .= "\"" . addslashes(strtolower(trim($c))) . "\",";
+			$options['reject_cookies'] .= $c . "\n";
+		}
+		$buffer = rtrim($buffer, ',');
+		$buffer .= ");\n";
+	}
+	else {
+		$buffer .= '$hyper_cache[\'reject_cookies\'] = false;' . "\n";
+	}
 
-    if (isset($options['reject_cookies']) && trim($options['reject_cookies']) != ''){
-        $options['reject_cookies'] = str_replace(' ', "\n", $options['reject_cookies']);
-        $options['reject_cookies'] = str_replace("\r", "\n", $options['reject_cookies']);
-        $buffer .= '$hyper_cache[\'reject_cookies\'] = array(';
-        $reject_cookies = explode("\n", $options['reject_cookies']);
-        $options['reject_cookies'] = '';
-        foreach ($reject_cookies as $c){
-            $c = trim($c);
-            if ($c == '') continue;
-            $buffer .= "\"" . addslashes(strtolower(trim($c))) . "\",";
-            $options['reject_cookies'] .= $c . "\n";
-        }
-        $buffer = rtrim($buffer, ',');
-        $buffer .= ");\n";
-    }
-    else {
-        $buffer .= '$hyper_cache[\'reject_cookies\'] = false;' . "\n";
-    }
+	if (isset($options['mobile'])){
+		if (!isset($options['mobile_agents']) || trim($options['mobile_agents']) == ''){
+			$options['mobile_agents'] = "elaine/3.0\niphone\nipod\npalm\neudoraweb\nblazer\navantgo\nwindows ce\ncellphone\nsmall\nmmef20\ndanger\nhiptop\nproxinet\nnewt\npalmos\nnetfront\nsharp-tq-gx10\nsonyericsson\nsymbianos\nup.browser\nup.link\nts21i-10\nmot-v\nportalmmm\ndocomo\nopera mini\npalm\nhandspring\nnokia\nkyocera\nsamsung\nmotorola\nmot\nsmartphone\nblackberry\nwap\nplaystation portable\nlg\nmmp\nopwv\nsymbian\nepoc";
+		}
+		if (trim($options['mobile_agents']) != ''){
+			$options['mobile_agents'] = str_replace(',', "\n", $options['mobile_agents']);
+			$options['mobile_agents'] = str_replace("\r", "\n", $options['mobile_agents']);
+			$buffer .= '$hyper_cache[\'mobile_agents\'] = array(';
+			$mobile_agents = explode("\n", $options['mobile_agents']);
+			$options['mobile_agents'] = '';
+			foreach ($mobile_agents as $uri){
+				$uri = trim($uri);
+				if ($uri == '') continue;
+				$buffer .= "\"" . addslashes(strtolower(trim($uri))) . "\",";
+				$options['mobile_agents'] .= $uri . "\n";
+			}
+			$buffer = rtrim($buffer, ',');
+			$buffer .= ");\n";
+        	}
+		else {
+			$buffer .= '$hyper_cache[\'mobile_agents\'] = false;' . "\n";
+		}
+	}
 
-    if (isset($options['mobile'])){
-        if (!isset($options['mobile_agents']) || trim($options['mobile_agents']) == ''){
-            $options['mobile_agents'] = "elaine/3.0\niphone\nipod\npalm\neudoraweb\nblazer\navantgo\nwindows ce\ncellphone\nsmall\nmmef20\ndanger\nhiptop\nproxinet\nnewt\npalmos\nnetfront\nsharp-tq-gx10\nsonyericsson\nsymbianos\nup.browser\nup.link\nts21i-10\nmot-v\nportalmmm\ndocomo\nopera mini\npalm\nhandspring\nnokia\nkyocera\nsamsung\nmotorola\nmot\nsmartphone\nblackberry\nwap\nplaystation portable\nlg\nmmp\nopwv\nsymbian\nepoc";
-        }
+	$hpe_dir = pathinfo(__FILE__, PATHINFO_DIRNAME);
+	$buffer .= 'if(!defined("HYPER_CACHE_EXTENDED_OPTIONS") || HYPER_CACHE_EXTENDED_OPTIONS!="yes"){'."\n";
+	$buffer .= "\tinclude(WP_CONTENT_DIR . '/plugins/hyper-cache-extended/cache.php');\n";
+	$buffer .= "}\n";
 
-        if (trim($options['mobile_agents']) != ''){
-            $options['mobile_agents'] = str_replace(',', "\n", $options['mobile_agents']);
-            $options['mobile_agents'] = str_replace("\r", "\n", $options['mobile_agents']);
-            $buffer .= '$hyper_cache[\'mobile_agents\'] = array(';
-            $mobile_agents = explode("\n", $options['mobile_agents']);
-            $options['mobile_agents'] = '';
-            foreach ($mobile_agents as $uri){
-                $uri = trim($uri);
-                if ($uri == '') continue;
-                $buffer .= "\"" . addslashes(strtolower(trim($uri))) . "\",";
-                $options['mobile_agents'] .= $uri . "\n";
-            }
-            $buffer = rtrim($buffer, ',');
-            $buffer .= ");\n";
-        }
-        else {
-            $buffer .= '$hyper_cache[\'mobile_agents\'] = false;' . "\n";
-        }
-    }
+	$plugin_data = get_plugin_data(dirname(__FILE__).'/plugin.php');
+	$plugin_version = $plugin_data['Version'];
+	$buffer .= "define('HYPER_CACHE_EXTENDED', '".$plugin_version."');\n";
+	$buffer .= '?>';
 
-    $hpe_dir = pathinfo(__FILE__, PATHINFO_DIRNAME);
-
-    $buffer .= "include(WP_CONTENT_DIR . '/plugins/hyper-cache-extended/cache.php');\n";
-    $buffer .= '?>';
-
-    return $buffer;
+	return $buffer;
 }
 ?>
