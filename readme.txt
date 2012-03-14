@@ -76,7 +76,7 @@ What is Max Server Load Average? Read on [this page](http://marto.lazarov.org/pl
 == Changelog ==
 
 = 1.0.0 =
-* New cache directory outsite of plugins dir. Now cache files will not be removed when upgrading Hyper Cache Extended
+* New cache directory outside of Hyper Cache Extended plugin home directory. Now cache files will NOT be removed when upgrading Hyper Cache Extended.
 * Fixed bug which causes incorect is_feed check
 * Now hyper cache extended uses only advanced-cache.php config (config is replaces when upgrading)
 
