@@ -272,7 +272,9 @@ function hyper_cache_callback($buffer) {
 		}
 		return $buffer;
 	}
-
+	if(!function_exists('is_home')){
+		return $buffer;
+	}
 
 	if (is_home() && $hyper_cache['home']) {
 		return $buffer;
