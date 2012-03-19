@@ -184,7 +184,7 @@ $perc = @round((100/$space)*$space_free,2);
 <tr valign="top">
     <th><?php _e('Cached pages timeout', 'hyper-cache'); ?></th>
     <td>
-        <input type="text" size="5" name="options[timeout]" value="<?php echo htmlspecialchars(round($options['timeout'])); ?>"/>
+        <input type="text" size="5" name="options[timeout]" value="<?php echo htmlspecialchars(round($options['timeout']/60)); ?>"/>
         (<?php _e('minutes', 'hyper-cache'); ?>)
         <br />
         <?php _e('Minutes a cached page is valid and served to users. A zero value means a cached page is valid forever.', 'hyper-cache');?>
