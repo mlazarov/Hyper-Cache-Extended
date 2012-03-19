@@ -46,7 +46,7 @@ function hyper_activate(){
 	$options = array();
 	$options['comment'] = 1;
 	$options['archive'] = 1;
-	$options['timeout'] = 1440;
+	$options['timeout'] = 720;
         $options['load'] = 5;	
 	$options['redirects'] = 1;	
 	$options['notfound'] = 1;	
@@ -320,8 +320,7 @@ function hyper_log($text){
 function hyper_generate_config(&$options){
 	global $hyper_cache;
 	$buffer = '';
-	$timeout = $options['timeout']*60;
-	if ($timeout == 0) $timeout = 2000000000;
+	if ($options['timeout'] == 0) $timeout = 1440
 
 	$cache_path = WP_CONTENT_DIR . '/cache/';
 
@@ -335,7 +334,7 @@ function hyper_generate_config(&$options){
 	// Invalidate archives on post invalidation
 	$buffer .= '$hyper_cache[\'archive\'] = ' . ($options['archive']?'true':'false') . ";\n";
 	// Single page timeout
-	$buffer .= '$hyper_cache[\'timeout\'] = ' . ($timeout) . ";\n";
+	$buffer .= '$hyper_cache[\'timeout\'] = ' . (int)$options['timeout'] . ";\n";
 	// Server Max Load
 	$buffer .= '$hyper_cache[\'load\'] = ' . (int)($options['load']?$options['load']:5) . ";\n";
 	// Expire Type

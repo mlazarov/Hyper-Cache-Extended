@@ -125,7 +125,7 @@ $server_load = (float)$loadavg[0];
 $hc_file_time = @ filemtime($hc_file);
 $hc_file_age = time() - $hc_file_time;
 
-if ($hc_file_age > $hyper_cache['timeout']){
+if ($hc_file_age > ($hyper_cache['timeout']*60)){
 	if($server_load < $hyper_cache['load']) {
 		hyper_cache_start();
 		return;
