@@ -174,7 +174,7 @@ $perc = @round((100/$space)*$space_free,2);
     ?><br/><i><?php _e('Enable/Disable auto purging of old files. Enable cleaning process to remove expired cache. This will free some space, but it\'s better to keep this Disabled', 'hyper-cache'); ?></i></from></td>
 </tr>
 </table>
-
+<br/><br/>
 
 <h3><?php _e('Configuration'); ?></h3>
 
