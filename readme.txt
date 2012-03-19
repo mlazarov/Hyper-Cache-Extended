@@ -2,7 +2,7 @@
 Tags: cache,chaching,speed,performance,super cache,wp cache
 Requires at least: 2.5
 Tested up to: 3.3.1
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=D96ZZLGAV8X8J
 Contributors: mlazarov
 
@@ -74,6 +74,10 @@ so I can update it more easly.
 What is Max Server Load Average? Read on [this page](http://marto.lazarov.org/plugins/hyper-cache-extended/max-server-load-average) [bg]
 
 == Changelog ==
+
+= 1.0.1 =
+* Fixed cached pages timeout bug
+* Added advanced-cache.php version check
 
 = 1.0.0 =
 * New cache directory outside of Hyper Cache Extended plugin home directory. Now cache files will NOT be removed when upgrading Hyper Cache Extended.

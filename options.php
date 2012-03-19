@@ -12,7 +12,7 @@ define('HYPER_CACHE_EXTENDED_OPTIONS','yes');
 
 $advanced_cache_file =  WP_CONTENT_DIR . '/advanced-cache.php';
 
-if(!file_exists($advanced_cache_file)){
+if(!file_exists($advanced_cache_file) || !defined('HYPER_CACHE_EXTENDED')){
 	hyper_activate();
 }
 
