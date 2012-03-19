@@ -320,7 +320,7 @@ function hyper_log($text){
 function hyper_generate_config(&$options){
 	global $hyper_cache;
 	$buffer = '';
-	if ($options['timeout'] == 0) $timeout = 1440
+	if ($options['timeout'] == 0) $timeout = 1440;
 
 	$cache_path = WP_CONTENT_DIR . '/cache/';
 
