@@ -12,7 +12,10 @@ define('HYPER_CACHE_EXTENDED_OPTIONS','yes');
 
 $advanced_cache_file =  WP_CONTENT_DIR . '/advanced-cache.php';
 
-if(!file_exists($advanced_cache_file) || !defined('HYPER_CACHE_EXTENDED')){
+$plugin_data = get_plugin_data(dirname(__FILE__).'/plugin.php');
+$plugin_version = $plugin_data['Version'];
+
+if(!file_exists($advanced_cache_file) || !defined('HYPER_CACHE_EXTENDED') || $plugin_version != HYPER_CACHE_EXTENDED){
 	hyper_activate();
 }
 
@@ -84,8 +87,6 @@ if (isset ($_POST['save'])) {
 	}
 }
 
-$plugin_data = get_plugin_data(dirname(__FILE__).'/plugin.php');
-$plugin_version = $plugin_data['Version'];
 ?>
 <div class="wrap">
 
