@@ -42,15 +42,15 @@ register_activation_hook(__FILE__, 'hyper_activate');
 
 function hyper_activate(){
 	$hce_options = get_option('hyper_cache_extended');
-	
+
 	$options = array();
 	$options['comment'] = 1;
 	$options['archive'] = 1;
 	$options['timeout'] = 720;
-        $options['load'] = 5;	
-	$options['redirects'] = 1;	
-	$options['notfound'] = 1;	
-	$options['clean_interval'] = 60;	
+        $options['load'] = 5;
+	$options['redirects'] = 1;
+	$options['notfound'] = 1;
+	$options['clean_interval'] = 60;
 	$options['enable_clean'] = 1;
 	$options['gzip'] = 1;
 	$options['store_compressed'] = 1;
@@ -75,7 +75,7 @@ add_action('hyper_clean', 'hyper_clean');
 function hyper_clean(){
 	global $hyper_cache;
 	// Latest global invalidation (may be false)
-	
+
 	$invalidation_time = @filemtime($hyper_cache['path'] . '/_global.dat');
 	hyper_log('start cleaning');
 	$timeout = $hyper_cache['timeout']*60;
@@ -358,7 +358,7 @@ function hyper_generate_config(&$options){
 	$buffer .= '$hyper_cache[\'home\'] = ' . (isset($options['home'])?'true':'false') . ";\n";
 	// Disable last modified header
 	$buffer .= '$hyper_cache[\'lastmodified\'] = ' . (isset($options['lastmodified'])?'true':'false') . ";\n";
-	
+
 	if ($options['gzip']) $options['store_compressed'] = 1;
 
 	$buffer .= '$hyper_cache[\'gzip\'] = ' . (isset($options['gzip'])?'true':'false') . ";\n";
@@ -369,7 +369,7 @@ function hyper_generate_config(&$options){
 	if (isset($options['reject']) && trim($options['reject']) != ''){
 		$options['reject'] = str_replace(' ', "\n", $options['reject']);
 		$options['reject'] = str_replace("\r", "\n", $options['reject']);
-		$buffer .= '$hyper_cache_reject = array(';
+		$buffer .= '$hyper_cache[\'reject\'] = array(';
 		$reject = explode("\n", $options['reject']);
 		$options['reject'] = '';
 		foreach ($reject as $uri){
@@ -404,7 +404,7 @@ function hyper_generate_config(&$options){
 		$buffer .= '$hyper_cache[\'reject_agents\'] = false;' . "\n";
 	}
 
-    
+
 	if (isset($options['reject_cookies']) && trim($options['reject_cookies']) != ''){
 		$options['reject_cookies'] = str_replace(' ', "\n", $options['reject_cookies']);
 		$options['reject_cookies'] = str_replace("\r", "\n", $options['reject_cookies']);

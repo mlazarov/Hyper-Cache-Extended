@@ -50,7 +50,7 @@ if (isset ($_POST['autoclean_enable'])) {
 $error = false;
 $saved = false;
 
-if (isset ($_POST['save'])) {	
+if (isset ($_POST['save'])) {
 	//if (!check_admin_referer()) die('No hacking please');
 	$tmp = stripslashes_deep($_POST['options']);
 
@@ -274,7 +274,14 @@ $perc = @round((100/$space)*$space_free,2);
 <tr valign="top">
     <th><?php _e('Mobile agent list', 'hyper-cache'); ?></th>
     <td>
-        <textarea wrap="off" rows="4" cols="70" name="options[mobile_agents]"><?php echo htmlspecialchars($options['mobile_agents']); ?></textarea>
+        <textarea wrap="off" rows="4" cols="70" name="options[mobile_agents]"><?php
+        if($options['mobile_agents']){
+        	if(is_array($options['mobile_agents']))
+    			echo implode("\n",$options['mobile_agents']);
+        	else
+	        	echo htmlspecialchars($options['mobile_agents']);
+        }
+        ?></textarea>
         <br />
         <?php _e('One per line mobile agents to check for when a page is requested.', 'hyper-cache'); ?>
         <?php _e('The mobile agent string is matched against the agent a device is sending to the server.', 'hyper-cache'); ?>
@@ -414,7 +421,13 @@ _e('For who is using search engines friendly permalink format is safe to
 <tr valign="top">
     <th><?php _e('URI to reject', 'hyper-cache'); ?></th>
     <td>
-        <textarea wrap="off" rows="5" cols="70" name="options[reject]"><?php echo htmlspecialchars($options['reject']); ?></textarea>
+        <textarea wrap="off" rows="5" cols="70" name="options[reject]"><?php
+        if($options['reject']){
+        	if(is_array($options['reject']))
+        		echo implode("\n",$options['reject']);
+        	else
+	        	echo htmlspecialchars($options['reject']);
+        }?></textarea>
         <br />
         <?php _e('Write one URI per line, each URI has to start with a slash.', 'hyper-cache'); ?>
         <?php _e('A specified URI will match the requested URI if the latter starts with the former.', 'hyper-cache'); ?>
@@ -441,7 +454,14 @@ if (is_array($languages)) {
 <tr valign="top">
     <th><?php _e('Agents to reject', 'hyper-cache'); ?></th>
     <td>
-        <textarea wrap="off" rows="5" cols="70" name="options[reject_agents]"><?php echo htmlspecialchars($options['reject_agents']); ?></textarea>
+        <textarea wrap="off" rows="5" cols="70" name="options[reject_agents]"><?php
+        if($options['reject_agents']){
+        	if(is_array($options['reject_agents']))
+        		echo implode("\n",$options['reject_agents']);
+        	else
+	        	echo htmlspecialchars($options['reject_agents']);
+
+        }?></textarea>
         <br />
         <?php _e('Write one agent per line.', 'hyper-cache'); ?>
         <?php _e('A specified agent will match the client agent if the latter contains the former. The matching is case insensitive.', 'hyper-cache'); ?>
@@ -451,7 +471,14 @@ if (is_array($languages)) {
 <tr valign="top">
     <th><?php _e('Cookies matching', 'hyper-cache'); ?></th>
     <td>
-        <textarea wrap="off" rows="5" cols="70" name="options[reject_cookies]"><?php echo htmlspecialchars($options['reject_cookies']); ?></textarea>
+        <textarea wrap="off" rows="5" cols="70" name="options[reject_cookies]"><?php
+        if($options['reject_cookies']){
+        	if(is_array($options['reject_cookies']))
+        		echo htmlspecialchars(implode("\n",$options['reject_cookies']));
+        	else
+        		echo $options['reject_cookies'];
+        }
+        ?></textarea>
         <br />
         <?php _e('Write one cookie name per line.', 'hyper-cache'); ?>
         <?php _e('When a specified cookie will match one of the cookie names sent bby the client the cache stops.', 'hyper-cache'); ?>
