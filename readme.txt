@@ -77,6 +77,7 @@ What is Max Server Load Average? Read on [this page](http://marto.lazarov.org/pl
 
 = 1.0.3 =
 * Fixed conflict with zlib.output_compression and HCE deflate support
+* Fixing "Max server load average" config description (10x to scoobydoo)
 
 = 1.0.1 =
 * Fixed cached pages timeout bug
