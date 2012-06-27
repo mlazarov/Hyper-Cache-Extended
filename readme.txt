@@ -75,6 +75,9 @@ What is Max Server Load Average? Read on [this page](http://marto.lazarov.org/pl
 
 == Changelog ==
 
+= 1.0.3 =
+* Fixed conflict with zlib.output_compression and HCE deflate support
+
 = 1.0.1 =
 * Fixed cached pages timeout bug
 * Added advanced-cache.php version check

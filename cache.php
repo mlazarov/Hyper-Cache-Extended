@@ -29,7 +29,6 @@ $hyper_uri = $_SERVER['REQUEST_URI'];
 $hyper_qs = strpos($hyper_uri, '?');
 
 if ($hyper_qs !== false) {
-
 	if ($hyper_cache['strip_qs'])
 		$hyper_uri = substr($hyper_uri, 0, $hyper_qs);
 	elseif (!$hyper_cache['cache_qs']){
@@ -202,13 +201,16 @@ if ($hyper_data['status'] == 404)
 	header("HTTP/1.1 404 Not Found");
 
 // Send the cached html
-if ($hyper_cache['gzip'] && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false && strlen($hyper_data['gz']) > 0) {
+if ($hyper_cache['gzip'] && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false && strlen($hyper_data['gz']) > 0 && !ini_get('zlib.output_compression')) {
 	hyper_log_cache('Send gzip encoded data',3);
-	header('Content-Encoding: gzip');
+	Header('Content-Encoding-handler: hce');
+	Header('Content-Encoding: gzip');
 	echo $hyper_data['gz'];
 } else {
-	// No compression accepted, check if we have the plain html or
-	// decompress the compressed one.
+	Header('Content-Encoding-handler: default');
+	// No compression accepted or already supported natively by PHP, 
+	// Check if we have the plain html or decompress the compressed one.
+	          
 	if ($hyper_data['html']) {
 		//header('Content-Length: ' . strlen($hyper_data['html']));
 		hyper_log_cache('Sending flat data',3);
