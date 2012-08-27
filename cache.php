@@ -49,8 +49,8 @@ if (strpos($hyper_uri, 'robots.txt') !== false){
 }
 
 // Checks for rejected url
-if ($hyper_cache_reject !== false) {
-	foreach ($hyper_cache_reject as $uri) {
+if ($hyper_cache['reject'] !== false) {
+	foreach ($hyper_cache['reject'] as $uri) {
 		if (substr($uri, 0, 1) == '"') {
 			if ($uri == '"' . $hyper_uri . '"'){
 				hyper_log_cache('Rejected URL1 found returning',3);
