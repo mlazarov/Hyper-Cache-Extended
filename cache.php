@@ -36,7 +36,7 @@ if ($hyper_qs !== false) {
 		parse_str($_SERVER['QUERY_STRING'],$argv);
 		if(count($argv)==1 && (isset($argv['page_id']) || isset($argv['p']))){
 			hyper_log_cache('QS found but only ignored items',3);
-		}else{	
+		}else{
 			hyper_log_cache('QS found returning',3);
 			return false;
 		}
@@ -106,7 +106,7 @@ if (function_exists('is_multisite') && is_multisite() && strpos($hyper_uri, '/fi
 	return false;
 
 // The name of the file with html and other data
-$hyper_cache_name = md5($hyper_uri);
+$hyper_cache_name = md5($_SERVER['HTTP_HOST'].$hyper_uri);
 $hc_file = $hyper_cache['path'] . $hyper_cache_name . hyper_mobile_type() . '.dat';
 
 
@@ -208,9 +208,9 @@ if ($hyper_cache['gzip'] && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !==
 	echo $hyper_data['gz'];
 } else {
 	Header('Content-Encoding-handler: default');
-	// No compression accepted or already supported natively by PHP, 
+	// No compression accepted or already supported natively by PHP,
 	// Check if we have the plain html or decompress the compressed one.
-	          
+
 	if ($hyper_data['html']) {
 		//header('Content-Length: ' . strlen($hyper_data['html']));
 		hyper_log_cache('Sending flat data',3);
@@ -305,7 +305,7 @@ function hyper_cache_callback($buffer) {
 		elseif (is_page()){
 			$data['type'] = 'page';
 		}
-		
+
 	}
 	$buffer = trim($buffer);
 
@@ -351,10 +351,11 @@ function hyper_cache_write(& $data) {
 		if ($data['gz'])
 			unset ($data['html']);
 	}
+	$file_exists = file_exists($hc_file);
 	$file = fopen($hc_file, 'w');
 	fwrite($file, serialize($data));
 	fclose($file);
-	hyper_log_cache('Cache writed',2);
+	hyper_log_cache('Cache writed '.($file_exists?'(old)':'(new)'),2);
 
 	header('Last-Modified: ' . date("r", @ filemtime($hc_file)));
 }
@@ -428,7 +429,7 @@ function hyper_log_cache($msg,$level=2) {
 	 * 3 - Debug
 	 */
 	return;
-	
+
 	// Log only errors: level > 2
 	if($level>2)return;
 
