@@ -3,7 +3,7 @@
 Plugin Name: Hyper Cache Extended
 Plugin URI: http://marto.lazarov.org/plugins/hyper-cache-extended
 Description: Hyper Cache Extended is a cache system for WordPress to improve it's perfomances and save resources. Before update <a href="http://wordpress.org/extend/plugins/hyper-cache-extended/" target="_blank">read the version changes</a>. To manually upgrade remeber the sequence: deactivate, update, activate.
-Version: 1.0.5
+Version: 1.1.0
 Author: Martin Lazarov
 Author URI: http://marto.lazarov.org
 Disclaimer: Use at your own risk. No warranty expressed or implied is provided. Hyper Cache Extened is based on Hyper Cache plugin
@@ -120,29 +120,36 @@ function hyper_deactivate(){
 	}
 }
 
-$hyper_notice = '';
 
-if (is_admin() && isset($hyper_cache)){
-    if (!is_dir($hyper_cache['path'])){
-    	@mkdir($hyper_cache['path']);
-    	if (!is_dir($hyper_cache['path'])){
-      	  $hyper_notice .= 'Hyper Cache was not able to create the folder "cache" ('.$hyper_cache['path'].') in its installation dir. Create it by hand and make it writable.<br />';
-    	}
-    }
+add_action('admin_notices', 'hyper_admin_notices');
+function hyper_admin_notices() {
+	global $hyper_cache;
 
-    if (!is_file(WP_CONTENT_DIR . '/advanced-cache.php')){
-        $hyper_notice .= 'Your wp-content folder is not writable. Hyper Cache needs to create a file called advanced-cache.php in to that folder in order to work. Make it writable and deactivate and reactivate Hyper Cache.<br />';
-    }
+	$hyper_notice = '';
 
-    if (!defined('WP_CACHE') || !WP_CACHE){
-        $hyper_notice .= 'The WordPress cache system is not enabled! Please, activate it adding the line of code<br />define("WP_CACHE", true);<br /> in the file wp-config.php just after the define("WPLANG", ...).<br />';
-    }
+	if (is_admin()){
 
-    add_action('admin_notices', 'hyper_admin_notices');
-    function hyper_admin_notices() {
-        global $hyper_notice;
+		if(isset($hyper_cache)){
+		    if (!is_dir($hyper_cache['path'])){
+		    	@mkdir($hyper_cache['path']);
+		    	if (!is_dir($hyper_cache['path'])){
+		      	  $hyper_notice .= '<h3>Hyper Cache Extended was not able to create the folder "cache"</h3> The WordPress cache system cannot create4 ('.$hyper_cache['path'].'). Create it by hand and make it writable.<br />';
+		    	}
+		    }
+
+		    if (!is_file(WP_CONTENT_DIR . '/advanced-cache.php')){
+		        $hyper_notice .= '<h3>Your wp-content folder is not writable.</h3> Hyper Cache Extended needs to create a file called advanced-cache.php in to that folder in order to work. Make it writable and deactivate and reactivate Hyper Cache.<br />';
+		    }
+		}
+
+	    if (!defined('WP_CACHE') || !WP_CACHE){
+	        $hyper_notice .= '<h3>The WordPress cache system is not enabled!</h3> Please, activate it adding the line of code<br />' .
+	        		'<i>define("WP_CACHE", true);</i><br />' .
+	        		'in the file wp-config.php just after the <i>define("WPLANG", ...)</i>.<br />';
+	    }
+
         if ($hyper_notice == '') return;
-        echo '<div class="error fade" style="background-color:red;"><p><strong>' . $hyper_notice . '</strong></p></div>';
+        echo '<div class="error fade" style="line-height:20px;"><p>' . $hyper_notice . '</p></div>';
     }
 }
 
