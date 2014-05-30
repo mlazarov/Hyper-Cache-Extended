@@ -2,7 +2,7 @@
 Tags: cache,chaching,speed,performance,super cache,wp cache
 Requires at least: 2.5
 Tested up to: 3.5.0
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=D96ZZLGAV8X8J
 Contributors: mlazarov
 
@@ -58,7 +58,8 @@ Thanks to:
 
 1. Put the plugin folder into [wordpress_dir]/wp-content/plugins/
 2. Go into the WordPress admin interface and activate the plugin
-3. Optional: go to the options page and configure the plugin
+3. Add **define("WP_CACHE",true);** to wp-config.php just after the **define("WPLANG", ...);**.
+4. Optional: go to the options page and configure the plugin
 
 Before upgrade DEACTIVATE the plugin and then ACTIVATE and RECONFIGURE!
 
@@ -77,6 +78,9 @@ so I can update it more easly.
 What is Max Server Load Average? Read on [this page](http://marto.lazarov.org/plugins/hyper-cache-extended/max-server-load-average) [bg]
 
 == Changelog ==
+= 1.1.1 =
+* Install instructions update
+
 = 1.1.0 =
 * Adding WP_CACHE check
 
