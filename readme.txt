@@ -80,6 +80,7 @@ What is Max Server Load Average? Read on [this page](http://marto.lazarov.org/pl
 == Changelog ==
 = 1.3.0 =
 * Disabling cleanup process when server is above max load average
+* Fixing wrong used reject config item
 
 = 1.2.0 =
 * Adding default (optimal) value for max load average
