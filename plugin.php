@@ -3,7 +3,7 @@
 Plugin Name: Hyper Cache Extended
 Plugin URI: http://marto.lazarov.org/plugins/hyper-cache-extended
 Description: Hyper Cache Extended is a cache system for WordPress to improve it's perfomances and save resources. Before update <a href="http://wordpress.org/extend/plugins/hyper-cache-extended/" target="_blank">read the version changes</a>. To manually upgrade remeber the sequence: deactivate, update, activate.
-Version: 1.2.0
+Version: 1.3.0
 Author: Martin Lazarov
 Author URI: http://marto.lazarov.org
 Disclaimer: Use at your own risk. No warranty expressed or implied is provided. Hyper Cache Extened is based on Hyper Cache plugin
@@ -58,10 +58,7 @@ function hyper_activate(){
 	$options['expire_type'] = 'post';
 	$options['path'] = WP_CONTENT_DIR.'/cache/';
 
-	if (is_file('/proc/cpuinfo') && is_readable('/proc/cpuinfo')){
-		$cpuinfo = file_get_contents('/proc/cpuinfo');
-		preg_match_all('/^processor/m', $cpuinfo, $matches);
-		$numCpus = count($matches[0]);
+	if($numCpus = getCpuCount()){
 		$options['load'] = $numCpus + 1;
 	}
 	
@@ -97,6 +94,10 @@ function hyper_clean(){
 	if (!$handle) {
 		hyper_log('unable to open cache dir');
 		return;
+	}
+	$loadavg = getLoadAvg();
+	if($loadavg && $loadavg > $hyper_cache['load']){
+		hyper_log('load average too high. not running cleaning process');
 	}
 
 	while ($file = readdir($handle)) {
@@ -472,8 +473,23 @@ function hyper_generate_config(&$options){
 	$plugin_data = get_plugin_data(dirname(__FILE__).'/plugin.php');
 	$plugin_version = $plugin_data['Version'];
 	$buffer .= "define('HYPER_CACHE_EXTENDED', '".$plugin_version."');\n";
-	$buffer .= '?>';
+	$buffer .= '?'.'>';
 
 	return $buffer;
 }
-?>
+function getCpuCount(){
+	$numCpus = 0;
+	if (is_file('/proc/cpuinfo') && is_readable('/proc/cpuinfo')){
+		$cpuinfo = file_get_contents('/proc/cpuinfo');
+		preg_match_all('/^processor/m', $cpuinfo, $matches);
+		$numCpus = count($matches[0]);
+	}
+	return $numCpus;
+}
+function getLoadAvg(){
+	$loadavg = explode(' ',@file_get_contents('/proc/loadavg'));
+
+	return $loadavg[0];
+}
+
+
