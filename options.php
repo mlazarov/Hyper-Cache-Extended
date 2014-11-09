@@ -184,7 +184,7 @@ $perc = @round((100/$space)*$space_free,2);
         <input type="text" size="5" name="options[timeout]" value="<?php echo (int)$options['timeout']; ?>"/>
         (<?php _e('minutes', 'hyper-cache'); ?>)
         <br />
-        <?php _e('Minutes a cached page is valid and served to users. A zero value means a cached page is valid forever.', 'hyper-cache');?>
+        <?php _e('Minutes a cached page is valid and served to users. A zero (or less) value means a cached page is valid forever.', 'hyper-cache');?>
         <?php _e('If a cached page is older than specified value (expired) it is no more used and will be regenerated on next request of it.', 'hyper-cache');?>
         <?php _e('720 minutes is half a day, 1440 is a full day and so on.', 'hyper-cache'); ?>
     </td>
