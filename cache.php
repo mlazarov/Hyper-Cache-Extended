@@ -25,6 +25,14 @@ if (defined('SID') && SID != ''){
 	return false;
 }
 
+if(!$hyper_cache['load']){$hyper_cache['load'] = 5;}
+
+
+$loadavg = explode(' ',@file_get_contents('/proc/loadavg'));
+$server_load = (float)$loadavg[0];
+
+
+
 $hyper_uri = $_SERVER['REQUEST_URI'];
 $hyper_qs = strpos($hyper_uri, '?');
 
@@ -84,8 +92,8 @@ if ($hyper_cache['reject_cookies'] !== false) {
 
 // Do not use or cache pages when a wordpress user is logged on
 foreach ($_COOKIE as $n => $v) {
-	// If it's required to bypass the cache when the visitor is a commenter, stop.
-	if ($hyper_cache['comment'] && substr($n, 0, 15) == 'comment_author_')
+	// If it's required to bypass the cache when the visitor is a commenter AND server load is bellow critical, stop.
+	if ($hyper_cache['comment'] && substr($n, 0, 15) == 'comment_author_' && $server_load < $hyper_cache['load'])
 		return false;
 
 	// SHIT!!! This test cookie makes to cache not work!!!
@@ -115,11 +123,6 @@ if (!file_exists($hc_file)) {
 	hyper_cache_start(false);
 	return;
 }
-
-if(!$hyper_cache['load']) $hyper_cache['load'] = 5;
-
-$loadavg = explode(' ',@file_get_contents('/proc/loadavg'));
-$server_load = (float)$loadavg[0];
 
 $hc_file_time = @ filemtime($hc_file);
 $hc_file_age = time() - $hc_file_time;

@@ -43,6 +43,7 @@ register_activation_hook(__FILE__, 'hyper_activate');
 function hyper_activate(){
 	$hce_options = get_option('hyper_cache_extended');
 
+
 	$options = array();
 	$options['comment'] = 1;
 	$options['archive'] = 1;
@@ -56,6 +57,14 @@ function hyper_activate(){
 	$options['store_compressed'] = 1;
 	$options['expire_type'] = 'post';
 	$options['path'] = WP_CONTENT_DIR.'/cache/';
+
+	if (is_file('/proc/cpuinfo') && is_readable('/proc/cpuinfo')){
+		$cpuinfo = file_get_contents('/proc/cpuinfo');
+		preg_match_all('/^processor/m', $cpuinfo, $matches);
+		$numCpus = count($matches[0]);
+		$options['load'] = $numCpus + 1;
+	}
+	
 
 	$buffer = hyper_generate_config($options);
 	$file = @fopen(WP_CONTENT_DIR . '/advanced-cache.php', 'w');
