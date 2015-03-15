@@ -127,7 +127,7 @@ if (!file_exists($hc_file)) {
 $hc_file_time = @ filemtime($hc_file);
 $hc_file_age = time() - $hc_file_time;
 
-if ($hc_file_age > ($hyper_cache['timeout']*60)){
+if ($hyper_cache['timeout'] > 0 && $hc_file_age > ($hyper_cache['timeout']*60)){
 	if($server_load < $hyper_cache['load']) {
 		hyper_cache_start();
 		return;

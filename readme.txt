@@ -81,6 +81,7 @@ What is Max Server Load Average? Read on [this page](http://marto.lazarov.org/pl
 = 1.3.0 =
 * Disabling cleanup process when server is above max load average
 * Fixing wrong used reject config item
+* A zero (or less) value means a cached page is valid forever
 
 = 1.2.0 =
 * Adding default (optimal) value for max load average
