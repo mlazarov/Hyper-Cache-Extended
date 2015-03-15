@@ -399,7 +399,7 @@ function hyper_generate_config(&$options){
 		$buffer .= ");\n";
 	}
 	else {
-		$buffer .= '$hyper_cache_reject = false;' . "\n";
+		$buffer .= '$hyper_cache[\'reject\'] = false;' . "\n";
 	}
 
 	if (isset($options['reject_agents']) && trim($options['reject_agents']) != ''){
