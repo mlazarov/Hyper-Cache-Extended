@@ -1,8 +1,8 @@
 === Hyper Cache Extended===
 Tags: cache,chaching,speed,performance,super cache,wp cache
 Requires at least: 2.5
-Tested up to: 4.1.1
-Stable tag: 1.4.0
+Tested up to: 4.4.2
+Stable tag: 1.6.0
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=D96ZZLGAV8X8J
 Contributors: mlazarov
 
@@ -78,6 +78,12 @@ so I can update it more easly.
 What is Max Server Load Average? Read on [this page](http://marto.lazarov.org/plugins/hyper-cache-extended/max-server-load-average) [bg]
 
 == Changelog ==
+= 1.6.0 =
+* Adding smart home caching feature
+
+= 1.5.0 =
+* Adding screenshosts section
+
 = 1.4.0 =
 * Updating mobile user agents list (Thanks to Stoyan Stanev)
 
@@ -128,5 +134,8 @@ What is Max Server Load Average? Read on [this page](http://marto.lazarov.org/pl
 
     
 == Screenshots ==
+1. Cache Status
+2. Base Configuration
+3. Mobide Devices Configuration & Compression
+4. Advances Options
 
-No screenshots are available.

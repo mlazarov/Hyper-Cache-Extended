@@ -161,7 +161,12 @@ if ($hyper_data['type'] == 'home' || $hyper_data['type'] == 'archive' || $hyper_
 				hyper_log_cache('Archive or home expired! hyper_cache_start()',2);
 				hyper_cache_start();
 				return;
-			}else{
+			}elseif($hyper_data['type'] == 'home' && $hyper_cache['smarthome'] && $hc_file_age>60){
+				hyper_log_cache('Home expired. Server is highly loaded but smart home is enabled! hyper_cache_start()',2);
+				hyper_cache_start();
+				return;
+			}
+			else{
 				hyper_log_cache('Archives expired but Server load ('.$server_load.') above ('.$hyper_cache['load'].')',2);
 			}
 		}
