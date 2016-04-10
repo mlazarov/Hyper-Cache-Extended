@@ -377,6 +377,17 @@ _e('Only the textual part of a page can be compressed, not images, so a photo
     </td>
 </tr>
 
+
+<tr valign="top">
+    <th><?php _e('Smart Home caching', 'hyper-cache'); ?></th>
+    <td>
+        <input type="checkbox" name="options[smarthome]" value="1" <?php echo $options['smarthome']?'checked':''; ?>/>
+        <br />
+        <?php _e('Refresh home page cache even if the server load is above max server load average.','hyper-cache'); ?>
+    </td>
+</tr>
+
+
 <tr valign="top">
     <th><?php _e('Redirect caching', 'hyper-cache'); ?></th>
     <td>

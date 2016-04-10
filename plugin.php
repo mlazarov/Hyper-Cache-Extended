@@ -3,13 +3,13 @@
 Plugin Name: Hyper Cache Extended
 Plugin URI: http://marto.lazarov.org/plugins/hyper-cache-extended
 Description: Hyper Cache Extended is a cache system for WordPress to improve it's perfomances and save resources. Before update <a href="http://wordpress.org/extend/plugins/hyper-cache-extended/" target="_blank">read the version changes</a>. To manually upgrade remeber the sequence: deactivate, update, activate.
-Version: 1.4.0
+Version: 1.6.0
 Author: Martin Lazarov
 Author URI: http://marto.lazarov.org
 Disclaimer: Use at your own risk. No warranty expressed or implied is provided. Hyper Cache Extened is based on Hyper Cache plugin
 
 ---
-Copyright 2012  mlazarov  (email : lazarov@mail.bg)
+Copyright 2016  mlazarov  (email : martin@lazarov.bg)
 ---
 
 This program is free software; you can redistribute it and/or modify
@@ -373,6 +373,9 @@ function hyper_generate_config(&$options){
 	$buffer .= '$hyper_cache[\'strip_qs\'] = ' . (isset($options['strip_qs'])?'true':'false') . ";\n";
 	// DO NOT cache the home?
 	$buffer .= '$hyper_cache[\'home\'] = ' . (isset($options['home'])?'true':'false') . ";\n";
+	// Smart home cache?
+	$buffer .= '$hyper_cache[\'smarthome\'] = ' . (isset($options['smarthome'])?'true':'false') . ";\n";
+	
 	// Disable last modified header
 	$buffer .= '$hyper_cache[\'lastmodified\'] = ' . (isset($options['lastmodified'])?'true':'false') . ";\n";
 
