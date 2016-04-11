@@ -454,4 +454,3 @@ function hyper_log_cache($msg,$level=2) {
 	fwrite($file, $text . "\n\n");
 	fclose($file);
 }
-?>
