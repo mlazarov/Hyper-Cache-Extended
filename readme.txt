@@ -2,7 +2,7 @@
 Tags: cache,chaching,speed,performance,super cache,wp cache
 Requires at least: 2.5
 Tested up to: 4.4.2
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=D96ZZLGAV8X8J
 Contributors: mlazarov
 
