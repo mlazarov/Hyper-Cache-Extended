@@ -67,15 +67,24 @@ Before upgrade DEACTIVATE the plugin and then ACTIVATE and RECONFIGURE!
 
 **How can I submit a bug?**
 
-Write me to lazarov@mail.bg, please, it's the quicker way to have it fixed. You can write to the 
-WordPress forum, too, but I read it rarely.
+Contact me at martin@lazarov.bg - it's the quickest way to have it fixed. You can post to the WordPress forum too but I read it rarely.
 
-**Other FAQs?**
 
-I'm collection tips and FAQ on [this page](http://wordpress.org/extend/plugins/hyper-cache-extended/) 
-so I can update it more easly.
+**What is Max Server Load Average?** 
 
-What is Max Server Load Average? Read on [this page](http://marto.lazarov.org/plugins/hyper-cache-extended/max-server-load-average) [bg]
+If the `Server load` is above `Max server load average` then the plugin will serve only cached version and will not try to create new cache file until the server load is bellow `Max server load average` value.
+You can [read more about this in bulgarian](http://marto.lazarov.org/plugins/hyper-cache-extended/max-server-load-average)
+
+**Is it possible to exclude caching on certain pages with Hyper Cache Extended**
+
+Yes! You can use `URI to reject` text box to enter URL's that will not be cached!
+Use with caution - not allowing HCE to cache can lead to slow WordPres experience
+
+**Do do the HCE has option to automatically delete the expired cache?**
+
+ You can click on “Enable” for “Cleaning process” – “Cleaning process – Enable/Disable auto purging of old files. Enable cleaning process to remove expired cache. This will free some space, but it’s better to keep this Disabled”.
+
+
 
 == Changelog ==
 = 1.6.0 =
